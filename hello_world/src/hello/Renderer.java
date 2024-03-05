@@ -31,6 +31,7 @@ public class Renderer extends JPanel implements ActionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 1000, 100);
         
+        led.periodic();
         led.render(g);
 
         g.dispose();
