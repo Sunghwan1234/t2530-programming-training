@@ -11,12 +11,12 @@ import javax.swing.Timer;
 
 public class Renderer extends JPanel implements ActionListener {
     private final Timer timer;
-    private final LEDs led;
+    private final LEDs leds;
 
     public Renderer() {
-        this.led = new LEDs();
+        this.leds = new LEDs();
 
-        led.run();
+        leds.run();
 
         this.timer = new Timer(1, this);
         this.timer.start();
@@ -31,8 +31,11 @@ public class Renderer extends JPanel implements ActionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 1000, 100);
         
-        led.periodic();
-        led.render(g);
+        leds.periodic();
+        leds.render(g);
+
+        g.setColor(Color.white);
+        g.drawString("Timer: " + leds.timer, 0, 10+20);
 
         g.dispose();
     }

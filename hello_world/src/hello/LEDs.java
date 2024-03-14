@@ -12,7 +12,7 @@ import java.awt.Graphics;
 import java.util.Arrays;
 
 public class LEDs {
-    int NumberOfLeds = 40;
+    int NumberOfLeds = 50;
 
     int[] LedBuffer = new int[NumberOfLeds*4*4/3];
 
@@ -20,12 +20,7 @@ public class LEDs {
 
     int[] LedRGBWData = new int[NumberOfLeds*4];
 
-    final int indexR = 1;
-    final int indexG = 0;
-    final int indexB = 2;
-    final int indexW = 3;
-
-    double rainbow = 0;
+    double timer = 0;
 
     public LEDs() {}
 
@@ -60,17 +55,36 @@ public class LEDs {
         // print(Arrays.toString(LedBuffer));
     }
     public void periodic() {
-        rainbow += 0.05;
+        timer += 1;
+        //blink(50, 120, new Color(0,255,0),new Color(255,0,0));
+        rainbow(10,0.05);
+        
+        //print(Arrays.toString(LedRGBWData));
+        //print((int) (sin(rainbow)*255));
+        pushData();
+    }
+    public void rainbow(int Speed, double Change) {
+        /** RAINBOW LIGHTS!!!
+         * Speed: Higher = lower speed of the rainbow I like 10~100
+         * Change: 0.0~1.0
+         */
+        double rainbow = timer/Speed;
         for (int i=0;i<NumberOfLeds-1;i++) {
-            double j = i*(PI-0.05);
+            double j = i*(PI-Change);
             setDataRGBW(i,
             (int) (sin(rainbow+j)*255),
             (int) (sin(rainbow+2+j)*255),
             (int) (sin(rainbow+4+j)*255),0);}
-
-        //print(Arrays.toString(LedRGBWData));
-        //print((int) (sin(rainbow)*255));
-        pushData();
+    }
+    public void blink(int Percent, int Length, Color color1, Color color2) {
+        int blinktime = (int) timer % Length;
+        for (int i=0;i<NumberOfLeds-1;i++) {
+            if (Length*(100-Percent)/100 <= blinktime && blinktime <= Length-1) {
+                setDataRGBW(i, color1.getRed(),color1.getGreen(),color1.getBlue(),0);
+            } else {
+                setDataRGBW(i, color2.getRed(),color2.getGreen(),color2.getBlue(),0);
+            }
+        }
     }
 
     public void setRGB(int index, int R, int G, int B) { // CLASS FILE
@@ -123,7 +137,7 @@ public class LEDs {
         /** HOW TO READ R G B comments
          * I will use C and V as example
          * C=C: Use C to output as C. basically just normal setRGB
-         * C=V: Use V to output as C. for example G=W (W is the input value)
+         * C=V: Use V to output as C. for example G=W (W is the input value from here)
          * C=+V: Use the next index's V to output
          * C=-V: Use the previous index's V to output.
          * 
@@ -148,15 +162,15 @@ public class LEDs {
         }
     }
 
-    public void render(Graphics g) { // This works :D
-        for (int i=0;i<LedBuffer.length/4;i+=1) {
-            RenderingLedData[i*3 + 1] = LedBuffer[i*4 + 2];
-            RenderingLedData[i*3 + 0] = LedBuffer[i*4 + 1];
-            RenderingLedData[i*3 + 2] = LedBuffer[i*4 + 0];
+    public void render(Graphics g) { // This replaces the actual LEDs for a virtual one. should work perfectly :D
+        for (int i=0;i<LedBuffer.length/4;i+=1) { // This converts the LedBuffer to the rendering data, which is GRBW.
+            RenderingLedData[i*3 + 1] = LedBuffer[i*4 + 2]; // G 
+            RenderingLedData[i*3 + 0] = LedBuffer[i*4 + 1]; // R
+            RenderingLedData[i*3 + 2] = LedBuffer[i*4 + 0]; // B
         }
         //System.out.println(Arrays.toString(LED));
 
-        for (int i=0;i<RenderingLedData.length/4;i+=1) {
+        for (int i=0;i<RenderingLedData.length/4;i+=1) { // The actual rendering :D
             int W = RenderingLedData[(i*4)+3]/2;
             Color RGBW = new Color(
                 min(abs( RenderingLedData[(i*4)+1]) + W, 255),

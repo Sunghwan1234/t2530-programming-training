@@ -7,9 +7,9 @@ public class Main {
         JFrame window = new JFrame();
 
         window.setSize(1000, 100);
-        window.setResizable(false);
+        window.setResizable(true);
 
-        window.setTitle("Team 2530 Jump Game");
+        window.setTitle("LED SIMULATION");
         
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
