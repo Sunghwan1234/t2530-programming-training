@@ -28,39 +28,28 @@ public class LEDs {
     public static void print(int s) {System.out.println(s);}
 
     public void run() {
-        // for (int i=0;i<12;i++) {
+        //print(Arrays.toString(LedRGBWData));
+    }
+    public void periodic() {
+        timer += 1;
+        //blink(50, 120, new Color(0,255,0),new Color(255,0,0));
+        //rainbow(10,0.05);
+         // for (int i=0;i<12;i++) {
         //     if (i % 2 == 1) {
         //         setRGBW(i, 0, 1, 255, 3);
         //     } else {
         //         setRGBW(i, 0, 255, 2, 3);
         //     }
         // }
-        //for (int i=0;i<20;i++) {setDataRGBW(i,11,222,33,44);}
+        for (int i=0;i<20;i++) {setDataRGBW(i,11,222,33,44);}
 
         // setRGB(0, 0, 255, 0);
         // setRGB(1, 255, 0, 0);
         // setRGB(2, 0, 0, 255);
-        // setRGB(3, 255, 0, 0);
+        // setRGB(3, 0, 0, 0);
 
-        // setRGBW(0, 1, 255, 2, 3);
-        // setRGBW(1, 1, 255, 2, 3);
-        // setRGBW(2, 1, 255, 2, 3);
-        // setRGBW(3, 1, 255, 2, 3);
-
-
-
-
-        // print(Arrays.toString(LedRGBWData));
-        // pushData();
-        // print(Arrays.toString(LedBuffer));
-    }
-    public void periodic() {
-        timer += 1;
-        //blink(50, 120, new Color(0,255,0),new Color(255,0,0));
-        rainbow(10,0.05);
-        
+        //setDataRGBW(0,0,255,0,100);
         //print(Arrays.toString(LedRGBWData));
-        //print((int) (sin(rainbow)*255));
         pushData();
     }
     public void rainbow(int Speed, double Change) {
