@@ -55,7 +55,7 @@ public class Blocks {
 
                 if (prX > posX &&     // Is player right  X > left block collision
                     p.posX < brX &&   // Is player (left) x < right block collision
-                    pbY > posY &&   // Is player bottom y > top block collision
+                    pbY > posY &&     // Is player bottom y > top block collision
                     p.posY < bbY      // Is player (top)  y < bottom block collision
                 ) { if ( // Checking Top/Bottom block collision
                         (p.gravity== 1 && p.posY < bbY-3 && p.posY > posY) || // Player Top Y > Block Top Y +5 (Gravity 1)

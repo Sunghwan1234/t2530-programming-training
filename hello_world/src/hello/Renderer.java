@@ -25,6 +25,9 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
         this.timer.start();
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
+        addKeyListener(this);
+
+        // Add any more single instance code here
     }
     
     @Override
@@ -38,7 +41,9 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
         leds.render(g);
 
         g.setColor(Color.white);
-        g.drawString("Timer: " + leds.timer, 0, 10+20);
+        g.drawString("Timer: " + leds.timer, 0, 20+10);
+        g.drawString("KeyDown: " + leds.key,0,20+10*2);
+        g.drawString("test: " + leds.test, 0, 20+10*3);
 
         g.dispose();
     }
@@ -47,8 +52,13 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
     public void keyPressed(KeyEvent e) { // - - - - - - - - - - CONTROLS - - - - - - - - - - \\
         // Left arrow: 37
         switch(e.getKeyCode()) {
-            case 32: // Space bar
+            case 38: // UP
                 leds.key = true;
+
+                leds.test += 0.05;
+                break;
+            case 40:
+                leds.test -= 0.05;
                 break;
             default: break; 
         }
@@ -57,7 +67,7 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         switch(e.getKeyCode()) {
-            case 32: // Space bar
+            case 38: // UP
                 leds.key = false;
                 break;
             default: break;

@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 public class LEDs {
     boolean key = false;
+    float test = 0;
 
     int NumberOfLeds = 50; // Number of leds. change accordingly.
     double timer = 0; // timer. any questions?
@@ -34,7 +35,8 @@ public class LEDs {
     public void periodic() {
         timer += 1;
         //blink(50, 120, new Color(0,255,0),new Color(255,0,0));
-        rainbow(0.1,0.1,0.5);
+        //rainbow(0.1,0.1,test);
+        newrainbow();
          // for (int i=0;i<12;i++) {
         //     if (i % 2 == 1) {
         //         setRGBW(i, 0, 1, 255, 3);
@@ -53,6 +55,13 @@ public class LEDs {
         //print(Arrays.toString(LedRGBWData));
         pushData();
     }
+    public void newrainbow() {
+        float rainbow = (float) (timer/100) % 1;
+        int rrgb = Color.HSBtoRGB(rainbow, (float) 1, (float) 1);
+        Color rc = Color.getColor(null, rrgb);
+        System.out.println(rc);
+        setAllDataRGBW(rc.getRed(),rc.getGreen(),rc.getBlue(),0);
+    }
     public void rainbow(double Speed, double Change, double Vibrance) {
         /** RAINBOW LIGHTS!!!
          * Speed: 0.0 ~ 1.0
@@ -68,8 +77,8 @@ public class LEDs {
             double j = i*(PI-Change);
             setDataRGBW(i,
             (int) (sin(rainbow+j)*255),
-            (int) (sin(rainbow+(PI*Vibrance)+j)*255),
-            (int) (sin(rainbow+(PI*Vibrance*2)+j)*255),0);}
+            (int) (sin(rainbow+(Vibrance)+j)*255),
+            (int) (sin(rainbow+(Vibrance*2)+j)*255),0);}
     }
     public void blink(int Percent, int Length, Color color1, Color color2) {
         int blinktime = (int) timer % Length;
@@ -79,6 +88,15 @@ public class LEDs {
             } else {
                 setDataRGBW(i, color2.getRed(),color2.getGreen(),color2.getBlue(),0);
             }
+        }
+    }
+
+    public void setAllDataRGBW(int R, int G, int B, int W) {
+        for (int i=0;i<LedRGBWData.length/4;i++) {
+            LedRGBWData[i * 4] = R;
+            LedRGBWData[i * 4 + 1] = G;
+            LedRGBWData[i * 4 + 2] = B;
+            LedRGBWData[i * 4 + 3] = W;
         }
     }
 
