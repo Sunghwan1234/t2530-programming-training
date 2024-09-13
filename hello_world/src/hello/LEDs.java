@@ -59,8 +59,7 @@ public class LEDs {
         float rainbow = (float) (timer/100) % 1;
         int rrgb = Color.HSBtoRGB(rainbow, (float) 1, (float) 1);
         Color rc = Color.getColor(null, rrgb);
-        System.out.println(rc);
-        setAllDataRGBW(rc.getRed(),rc.getGreen(),rc.getBlue(),0);
+        setAllDataRGBW(rc,0);
     }
     public void rainbow(double Speed, double Change, double Vibrance) {
         /** RAINBOW LIGHTS!!!
@@ -84,7 +83,7 @@ public class LEDs {
         int blinktime = (int) timer % Length;
         for (int i=0;i<NumberOfLeds-1;i++) {
             if (Length*(100-Percent)/100 <= blinktime && blinktime <= Length-1) {
-                setDataRGBW(i, color1.getRed(),color1.getGreen(),color1.getBlue(),0);
+                setDataRGBW(i, color1,0);
             } else {
                 setDataRGBW(i, color2.getRed(),color2.getGreen(),color2.getBlue(),0);
             }
@@ -96,6 +95,14 @@ public class LEDs {
             LedRGBWData[i * 4] = R;
             LedRGBWData[i * 4 + 1] = G;
             LedRGBWData[i * 4 + 2] = B;
+            LedRGBWData[i * 4 + 3] = W;
+        }
+    }
+    public void setAllDataRGBW(Color color, int W) {
+        for (int i=0;i<LedRGBWData.length/4;i++) {
+            LedRGBWData[i * 4] = color.getRed();
+            LedRGBWData[i * 4 + 1] = color.getGreen();
+            LedRGBWData[i * 4 + 2] = color.getBlue();
             LedRGBWData[i * 4 + 3] = W;
         }
     }
@@ -113,6 +120,13 @@ public class LEDs {
         LedRGBWData[index * 4 + 2] = B;
         LedRGBWData[index * 4 + 3] = W;
     }
+    public void setDataRGBW(int index, Color color, int W) {
+        LedRGBWData[index * 4] = color.getRed();
+        LedRGBWData[index * 4 + 1] = color.getGreen();
+        LedRGBWData[index * 4 + 2] = color.getBlue();
+        LedRGBWData[index * 4 + 3] = W;
+    }
+
     public void pushData() { // This sets the RGBW
         for (int i=0; i<NumberOfLeds-1;i++) {
             setRGBW(i, LedRGBWData[i * 4],
@@ -143,9 +157,13 @@ public class LEDs {
          * How tf this encodes?
          * WPIPID hates simplicity, so I have to make this!!!
          * 
-         * YOUR input:      RGB W|RG BW|R GBW|RGBW|...
+         * YOUR input:      RGB W|RG BW|R GBW|RGBW|... 
+         * setRGBWLED:      RGB G WR WB G BRW RGB  ...
+         * case 1:          RGB g Wr          RGB    
+         * case 2:              G wR WB g
+         * case 3:                   wb G BRW    
          * input:           RGB|R GB|RG B|RGB|RGB|...
-         * 
+         *                    reorders correctly
          * setLED:          BGR|B GR|BG R|BGR|BGR|...
          *                    reorders correctly
          * WPILIB sends:    GRB|G RB|GR B|GRB|GRB|...
