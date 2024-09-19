@@ -13,10 +13,9 @@ import java.util.Arrays;
 
 public class LEDs {
     boolean key = false;
-    float test = 0;
+    double test = 0;
 
     int NumberOfLeds = 50; // Number of leds. change accordingly.
-    double timer = 0; // timer. any questions?
 
     int[] RenderingLedData = new int[NumberOfLeds*4]; // LED RGBW. FORMAT: GRBW | Used by the Renderer
     int[] LedBuffer = new int[NumberOfLeds*4*4/3]; // WPILIB. FORMAT: BGR | Used by WPILIB
@@ -33,35 +32,21 @@ public class LEDs {
         //print(Arrays.toString(LedRGBWData));
     }
     public void periodic() {
-        timer += 1;
         //blink(50, 120, new Color(0,255,0),new Color(255,0,0));
         //rainbow(0.1,0.1,test);
-        newrainbow();
-         // for (int i=0;i<12;i++) {
-        //     if (i % 2 == 1) {
-        //         setRGBW(i, 0, 1, 255, 3);
-        //     } else {
-        //         setRGBW(i, 0, 255, 2, 3);
-        //     }
-        // }
-        //for (int i=0;i<20;i++) {setDataRGBW(i,11,222,33,44);}
-
-        // setRGB(0, 0, 255, 0);
-        // setRGB(1, 255, 0, 0);
-        // setRGB(2, 0, 0, 255);
-        // setRGB(3, 0, 0, 0);
-
-        //setDataRGBW(0,0,255,0,100);
+        rainbow(Renderer.Timer, 0.03, 0);
         //print(Arrays.toString(LedRGBWData));
         pushData();
     }
-    public void newrainbow() {
-        float rainbow = (float) (timer/100) % 1;
-        int rrgb = Color.HSBtoRGB(rainbow, (float) 1, (float) 1);
-        Color rc = Color.getColor(null, rrgb);
-        setAllDataRGBW(rc,0);
+    public void rainbow(int Timer, double Change, int W) {
+        double rainbow = ((double) Timer/100) % 1;
+        for (int i=0;i<NumberOfLeds-1;i++) {
+            //setDataRGBW(i, Color.getColor(null, Color.HSBtoRGB((float) (rainbow-(i*Change)), (float) 1, (float) 1)), W);
+            setDataRGBW(i, Color.getHSBColor((float) (rainbow-(i*Change)+0.00001), (float) 1, (float) 1), W);
+        }
+        //setAllDataRGBW(rc,0);
     }
-    public void rainbow(double Speed, double Change, double Vibrance) {
+    public void oldrainbow(double Speed, double Change, double Vibrance) {
         /** RAINBOW LIGHTS!!!
          * Speed: 0.0 ~ 1.0
          * Change: 0.0 ~ 1.0
@@ -71,7 +56,7 @@ public class LEDs {
          * i: Which LED?
          * j: Change. Since the change is inside of SIN, adding PI adds nothing
          */
-        double rainbow = timer*Speed/10;
+        double rainbow = Renderer.Timer*Speed/10;
         for (int i=0;i<NumberOfLeds-1;i++) {
             double j = i*(PI-Change);
             setDataRGBW(i,
@@ -80,7 +65,7 @@ public class LEDs {
             (int) (sin(rainbow+(Vibrance*2)+j)*255),0);}
     }
     public void blink(int Percent, int Length, Color color1, Color color2) {
-        int blinktime = (int) timer % Length;
+        int blinktime = (int) Renderer.Timer % Length;
         for (int i=0;i<NumberOfLeds-1;i++) {
             if (Length*(100-Percent)/100 <= blinktime && blinktime <= Length-1) {
                 setDataRGBW(i, color1,0);

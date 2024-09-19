@@ -16,6 +16,8 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
     private final Timer timer;
     private final LEDs leds;
 
+    public static int Timer;
+
     public Renderer() {
         this.leds = new LEDs();
 
@@ -41,7 +43,7 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
         leds.render(g);
 
         g.setColor(Color.white);
-        g.drawString("Timer: " + leds.timer, 0, 20+10);
+        g.drawString("Timer: " + Timer, 0, 20+10);
         g.drawString("KeyDown: " + leds.key,0,20+10*2);
         g.drawString("test: " + leds.test, 0, 20+10*3);
 
@@ -55,10 +57,10 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
             case 38: // UP
                 leds.key = true;
 
-                leds.test += 0.05;
+                leds.test += 0.01;
                 break;
             case 40:
-                leds.test -= 0.05;
+                leds.test -= 0.01;
                 break;
             default: break; 
         }
@@ -79,7 +81,7 @@ public class Renderer extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) { // timer thingy
         timer.start();
-
+        Renderer.Timer += 1;
         repaint();
     }
 }
