@@ -6,7 +6,7 @@ import java.awt.Graphics;
 public class Board {
     public final int[][] bricks;
     private final int rows, cols;
-    public final int width = 40, height = 20;
+    public final int width = 70, height = 20;
 
     public Board() {
         this.rows = ((Game.WINDOW_WIDTH-(width*2))/width);
@@ -49,8 +49,10 @@ public class Board {
     public void checkCollision(int bx, int by, int bs, Ball ball) {
         // radius = 10 x1 and y1 starts at 1 (first brick top-left position)
         if (ball.contactrefresh > 0) {return;}
-        for(int x1 = 1; x1 < rows; x1++) {
-            for(int y1 = 1; y1 < cols; y1++) {
+        for(int x1 = 1; x1 < rows+1; x1++) {
+            for(int y1 = 1; y1 < cols+1; y1++) {
+                
+
 
             }
         }
