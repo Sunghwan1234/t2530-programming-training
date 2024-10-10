@@ -19,12 +19,12 @@ public class Player {
     }
 
     public void moveLeft() {
-        this.posX -= 100;
+        this.posX -= 10;
         checkBounds();
     }
 
     public void moveRight() {
-        this.posX += 100;
+        this.posX += 10;
         checkBounds();
     }
 

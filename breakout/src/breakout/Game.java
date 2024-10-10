@@ -41,7 +41,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         this.ball.velY = -1.5;
         this.ball.velX = -0.25;
 
-        this.board = new Board(8, 10);
+        this.board = new Board();
 
         this.timer = new Timer(1, this);
         this.timer.start();
@@ -49,12 +49,14 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         addKeyListener(this);
+
+        
     }
 
     @Override
     public void paint(Graphics g) {
         // Draw background
-        g.setColor(Color.BLACK);
+        g.setColor(Color.PINK);
         g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         // Brick

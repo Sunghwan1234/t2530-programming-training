@@ -55,7 +55,7 @@ public class Ball {
         // Ground
         if (posY >= Game.WINDOW_HEIGHT) {
             System.out.println("Game over, you lose!");
-            System.exit(0);
+            //System.exit(0);
         }
     }
 }
