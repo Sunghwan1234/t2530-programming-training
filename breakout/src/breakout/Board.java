@@ -6,15 +6,17 @@ import java.awt.Graphics;
 public class Board {
     public final int[][] bricks;
     private final int rows, cols;
-    public int width, height;
+    public final int width, height;
 
     public Board(int rows, int cols) {
-        this.bricks = new int[rows][cols];
-        this.rows = rows+2;
-        this.cols = cols+2;
+        this.bricks = new int[rows+2][cols+2];
+        this.rows = rows;
+        this.cols = cols;
 
-        this.width = Game.Width/(rows);
-        this.height = (Game.Height/2)/(cols);
+        this.width = Game.Width/(rows+2);
+        this.height = (Game.Height/2)/(cols+2);
+
+        System.out.println(rows +" "+ cols);
 
         for(int x = 0; x < rows+1; x++) {
             for(int y = 0; y < cols+1; y++) {
