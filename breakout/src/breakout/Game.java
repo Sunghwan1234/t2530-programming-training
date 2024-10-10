@@ -12,9 +12,9 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements ActionListener, KeyListener {
 
-    public static final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 500;
+    public static final int Width = 750, Height = 500;
 
-    public int score = 0;
+    public static int score = 0;
     public int Ycontacts = 0;
     public int Xcontacts = 0;
 
@@ -30,11 +30,11 @@ public class Game extends JPanel implements ActionListener, KeyListener {
 
     public Game() {
         this.player = new Player(
-            WINDOW_WIDTH / 2 - Player.WIDTH / 2, // 750/2 - 100/2 = 375 - 50 = 325 = X position of player
-            WINDOW_HEIGHT - Player.HEIGHT * 5 // 500 - 10*5 = 500 - 50 = 450 = Y position of player
+            Width / 2 - Player.Width / 2, // 750/2 - 100/2 = 375 - 50 = 325 = X position of player
+            Height - Player.Height * 5 // 500 - 10*5 = 500 - 50 = 450 = Y position of player
             );
 
-        this.ball = new Ball(WINDOW_WIDTH / 2, WINDOW_HEIGHT - Player.HEIGHT * 8);
+        this.ball = new Ball(Width / 2, Height - Player.Height * 8);
         // normal position at 400,400; right next to first brick: 65,25
         this.ball.posX = 400;
         this.ball.posY = 400;
@@ -55,7 +55,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     public void paint(Graphics g) {
         // Draw background
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        g.fillRect(0, 0, Width, Height);
 
         // Brick
         board.periodic(g, ball);

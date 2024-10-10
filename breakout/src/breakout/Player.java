@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Player {
 
-    public static final double WIDTH = 100, HEIGHT = 10;
+    public static final double Width = 100, Height = 10;
 
     // The x position of the player
     public double posX;
@@ -29,12 +29,12 @@ public class Player {
     }
 
     private void checkBounds() {
-        this.posX = Math.min(this.posX, Game.WINDOW_WIDTH);
+        this.posX = Math.min(this.posX, Game.Width);
         this.posX = Math.max(this.posX, 0);
     }
 
     public void render(Graphics g) {
         g.setColor(Color.GREEN);
-        g.fillRect((int) this.posX, (int) this.posY, (int) WIDTH, (int) HEIGHT);
+        g.fillRect((int) this.posX, (int) this.posY, (int) Width, (int) Height);
     }
 }

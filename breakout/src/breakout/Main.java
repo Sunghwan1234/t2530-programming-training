@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame();
 
-        window.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+        window.setSize(Game.Width, Game.Height);
         window.setResizable(false);
 
         window.setTitle("Team 2530 Breakout");
