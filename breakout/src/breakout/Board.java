@@ -9,8 +9,8 @@ public class Board {
     public final int width = 40, height = 40;
 
     public Board() {
-        this.rows = (Game.WINDOW_WIDTH-(width*2))/width;
-        this.cols = (Game.WINDOW_HEIGHT/2-(height))/height;
+        this.rows = ((Game.WINDOW_WIDTH-(width*2))/width)+1;
+        this.cols = ((Game.WINDOW_HEIGHT/2-(height))/height)+1;
 
         System.out.println(this.rows);
         System.out.println(this.cols);
@@ -42,8 +42,8 @@ public class Board {
             case 1: g.setColor(Color.GRAY); break;
             default: g.setColor(Color.GRAY); break;
         }
-        g.fillRect(bx, by, bx+width, by+height); 
-        g.setColor(Color.BLACK); g.drawRect(bx, by, bx+width, by+height);
+        g.fillRect(bx, by, width, height); 
+        g.setColor(Color.BLACK); g.drawRect(bx, by, width, height);
     }
 
     public void checkCollision(int bx, int by, int bs, Ball ball) {
