@@ -6,30 +6,30 @@ import java.awt.Graphics;
 public class Board {
     public final int[][] bricks;
     private final int rows, cols;
-    public final int width = 40, height = 40;
+    public final int width = 40, height = 20;
 
     public Board() {
-        this.rows = ((Game.WINDOW_WIDTH-(width*2))/width)+1;
-        this.cols = ((Game.WINDOW_HEIGHT/2-(height))/height)+1;
+        this.rows = ((Game.WINDOW_WIDTH-(width*2))/width);
+        this.cols = ((Game.WINDOW_HEIGHT/2-(height))/height);
 
         System.out.println(this.rows);
         System.out.println(this.cols);
 
-        this.bricks = new int[rows][cols];
+        this.bricks = new int[rows+1][cols+1];
 
-        for(int x = 0; x < rows; x++) {
-            for(int y = 0; y < cols; y++) {
+        for(int x = 0; x < rows+1; x++) {
+            for(int y = 0; y < cols+1; y++) {
                 bricks[x][y] = 1;
             }
         }
     }
 
     public void periodic(Graphics g, Ball ball) {
-        for(int x = 1; x < rows; x++) {
-            for(int y = 1; y < cols; y++) {
+        for(int x = 1; x < rows+1; x++) {
+            for(int y = 1; y < cols+1; y++) {
                 if(bricks[x][y]==0) continue;
-                renderBrick((x)*width, (y)*width, bricks[x][y], g);
-                checkCollision((x)*width, (y)*width, bricks[x][y], ball);
+                renderBrick((x)*width, (y)*height, bricks[x][y], g);
+                checkCollision((x)*width, (y)*height, bricks[x][y], ball);
             }
         }
     }
