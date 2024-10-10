@@ -1,0 +1,9 @@
+.gradle
+build
+.idea
+.vscode
+
+*.png
+
+# We need to exclude this jarfile from the gitignore in the root folder
+!gradle/wrapper/gradle-wrapper.jar
