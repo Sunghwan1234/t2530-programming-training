@@ -13,8 +13,8 @@ public class Board {
         this.rows = rows;
         this.cols = cols;
 
-        this.width = Game.Width/(rows+2);
-        this.height = (Game.Height/2)/(cols+2);
+        this.width = Game.width/(rows+2);
+        this.height = (Game.height/2)/(cols+2);
 
         System.out.println(rows +" "+ cols);
 

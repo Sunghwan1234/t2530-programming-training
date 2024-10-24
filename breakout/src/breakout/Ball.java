@@ -32,9 +32,9 @@ public class Ball {
         g.fillOval((int) posX, (int) posY, radius, radius);
     }
 
-    private void checkCollisions(Player player) {
+    private void checkCollisions(Player p) {
         // Top, left and right walls
-        if (posX <= 0 || posX >= Game.Width - 30) {
+        if (posX <= 0 || posX >= Game.width - 30) {
             velX = -velX;
         }
         if (posY <= 0) {
@@ -43,17 +43,17 @@ public class Ball {
 
         // Player collision
         if (
-            posX > player.posX && // bx > playerx(325 if middle)
-            posX < player.posX + Player.Width && // bx < 325(playerx) + 100(playerwidth)
-            posY >= player.posY - radius && // by >= 450(playery) - ball radius (10 default)
-            posY < player.posY + Player.Height // by < 450 + 10(height)
+            posX > p.posX && // bx > playerx(325 if middle)
+            posX < p.posX + p.width && // bx < 325(playerx) + 100(playerwidth)
+            posY >= p.posY - radius && // by >= 450(playery) - ball radius (10 default)
+            posY < p.posY + p.height // by < 450 + 10(height)
             ) {
             velY *= -1 - Math.random() / 10;
             velX += Math.random() / 10;
         }
 
         // Ground
-        if (posY >= Game.Height) {
+        if (posY >= Game.height) {
             System.out.println("Game over, you lose!");
             System.exit(0);
         }

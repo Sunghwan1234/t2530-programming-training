@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Player {
 
-    public static final double Width = 100, Height = 10;
+    public double width = 100, height = 10;
 
     // The x position of the player
     public double posX;
@@ -13,9 +13,9 @@ public class Player {
     // The y position of the player
     public final double posY;
 
-    public Player(double posX, double posY) {
-        this.posX = posX;
-        this.posY = posY;
+    public Player(double width, double height, double posX, double posY) {
+        this.width = width; this.height = height;
+        this.posX = posX; this.posY = posY;
     }
 
     public void moveLeft() {
@@ -29,12 +29,22 @@ public class Player {
     }
 
     private void checkBounds() {
-        this.posX = Math.min(this.posX, Game.Width);
-        this.posX = Math.max(this.posX, 0);
+        this.posX = Math.min(posX, Game.width-width);
+        this.posX = Math.max(posX, 0);
+    }
+
+    private void velocity() {
+        
+    }
+
+    public void periodic(Graphics g) {
+        velocity();
+
+        render(g);
     }
 
     public void render(Graphics g) {
         g.setColor(Color.GREEN);
-        g.fillRect((int) this.posX, (int) this.posY, (int) Width, (int) Height);
+        g.fillRect((int) posX, (int) posY, (int) width, (int) height);
     }
 }
