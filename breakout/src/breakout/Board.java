@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Board {
     public final int[][] bricks;
-    private final int rows, cols;
+    private final int rows, cols; // Rows and Columns are swapped (Cry about it)
     public final int width, height;
 
     public Board(int rows, int cols) {
@@ -16,7 +16,7 @@ public class Board {
         this.width = Game.width/(rows+2);
         this.height = (Game.height/2)/(cols+2);
 
-        System.out.println(rows +" "+ cols);
+        System.out.println("Summoned "+rows+" Rows and "+cols+" Cols (They are swapped cry about it)");
 
         for(int x = 0; x < rows+1; x++) {
             for(int y = 0; y < cols+1; y++) {
@@ -25,7 +25,7 @@ public class Board {
         }
     }
 
-    public void periodic(Graphics g, Ball ball) {
+    public void tick(Graphics g, Ball ball) {
         for(int x = 1; x < rows+1; x++) {
             for(int y = 1; y < cols+1; y++) {
                 if(bricks[x][y]==0) continue;

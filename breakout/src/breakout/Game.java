@@ -56,12 +56,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         g.fillRect(0, 0, width, height);
 
         // Brick
-        board.periodic(g, ball);
+        board.tick(g, ball);
 
-        // Draw Player
+        // Ticking objects
         player.tick(g);
-
-        // Draw ball
         ball.tick(g, player);
 
         // Draw Score
