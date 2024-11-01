@@ -8,54 +8,54 @@ public class Ball {
     public double velX, velY;
     public int contactrefresh = 0;
 
+    public boolean playerContact = false; // Prevent ball from getting stuck inside the player
+
     public static final int radius = 10;
 
-    public Ball(double posX, double posY) {
+    public Ball(double posX, double posY,double velX, double velY) {
         this.posX = posX; // 325
         this.posY = posY; // 450
+        this.velX = velX;
+        this.velY = velY;
     }
 
-    public void render(Graphics g, Player player) {
-        // Update
+    public void tick(Graphics g, Player p) {
         this.posX += this.velX;
         this.posY += this.velY;
+        collision(p);
 
-        // Collisions
-        if (contactrefresh > 0) {
-            contactrefresh -= 1;
-            System.out.println(contactrefresh);
-        }
-        checkCollisions(player);
-
-        // Render
-        g.setColor(Color.WHITE);
-        g.fillOval((int) posX, (int) posY, radius, radius);
+        render(g);
     }
 
-    private void checkCollisions(Player p) {
-        // Top, left and right walls
-        if (posX <= 0 || posX >= Game.width - 30) {
-            velX = -velX;
-        }
-        if (posY <= 0) {
-            velY = -velY;
-        }
+    public void collision(Player p) {
+        if (posX <= 0 || posX >= Game.width-Game.widthCorrection-radius) { // Left/Right
+            velX = -velX;}
+        if (posY <= 0) {velY = -velY;} // Top
 
-        // Player collision
-        if (
-            posX > p.posX && // bx > playerx(325 if middle)
-            posX < p.posX + p.width && // bx < 325(playerx) + 100(playerwidth)
-            posY >= p.posY - radius && // by >= 450(playery) - ball radius (10 default)
-            posY < p.posY + p.height // by < 450 + 10(height)
-            ) {
-            velY *= -1 - Math.random() / 10;
-            velX += Math.random() / 10;
-        }
-
-        // Ground
-        if (posY >= Game.height) {
+        if (posY >= Game.height) { // Bottom
             System.out.println("Game over, you lose!");
             System.exit(0);
         }
+
+        if (
+            posX >= p.posX && // Right of Plr
+            posX+radius <= p.posX + p.width && // Left of Plr
+            posY+radius >= p.posY && // Top of Plr
+            posY <= p.posY + p.height // Bottom of Plr (When will we use this? We will never know)
+        ) {
+            if (!playerContact) {
+                velY *= -1;
+                velX += p.velX/2;
+
+                playerContact = true;
+            }
+        } else {
+            playerContact = false;
+        }
+    }
+
+    public void render(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillOval((int) posX, (int) posY, radius, radius);
     }
 }

@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements ActionListener, KeyListener {
 
-    public static final int width = 750, height = 500;
+    public static final int width = 750, height = 500, widthCorrection = 16 ;
 
     public static boolean[] keyStates = new boolean[2];
 
@@ -34,7 +34,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             height-50
             );
 
-        this.ball = new Ball(400, 400);
+        this.ball = new Ball(400, 400, 0, -10);
         // normal position at 400,400; right next to first brick: 65,25
         this.ball.velY = -1.5;
         this.ball.velX = -0.25;
@@ -59,10 +59,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         board.periodic(g, ball);
 
         // Draw Player
-        player.periodic(g);
+        player.tick(g);
 
         // Draw ball
-        ball.render(g, player);
+        ball.tick(g, player);
 
         // Draw Score
         g.setColor(Color.WHITE);
