@@ -16,7 +16,7 @@ public class Board {
         this.width = Game.width/(rows+2);
         this.height = (Game.height/2)/(cols+2);
 
-        System.out.println("Summoned "+rows+" Rows and "+cols+" Cols (They are swapped cry about it)");
+        System.out.println("Summoned "+rows+" Rows and "+cols+" Cols");
 
         for(int x = 0; x < rows+1; x++) {
             for(int y = 0; y < cols+1; y++) {
@@ -28,9 +28,9 @@ public class Board {
     public void tick(Graphics g, Ball ball) {
         for(int x = 1; x < rows+1; x++) {
             for(int y = 1; y < cols+1; y++) {
-                if(bricks[x][y]==0) continue;
+                if(bricks[x][y] <= 0) continue;
                 renderBrick(x*width, y*height, bricks[x][y], g);
-                checkCollision(x*width, y*height, bricks[x][y], ball);
+                checkCollision(x,y, ball);
             }
         }
     }
@@ -47,9 +47,36 @@ public class Board {
         g.setColor(Color.BLACK); g.drawRect(bx, by, width, height);
     }
 
-    public void checkCollision(int bx, int by, int bs, Ball ball) {
-        // radius = 10 x1 and y1 starts at 1 (first brick top-left position)
-        if (ball.contactrefresh > 0) {return;}
-        
+    private void checkCollision(int x, int y, Ball b) {
+        boolean coll=false;
+        int dmt=Ball.diameter;
+        int bx=x*width, by=y*height;
+
+        if (b.collRefresh > 0) {return;}
+        if (
+            b.posX > bx-dmt &&   // Ball on Left
+            b.posX < bx+width &&    // Ball on right
+            b.posY > by-dmt &&   // Ball on Top
+            b.posY < by+height      // Ball on Bottom
+        ) {
+            if ( // Ball Left/Right
+                b.posY > by-(dmt/2) &&   // Ball on Top
+                b.posY < by+height-(dmt/2)      // Ball on Bottom
+            ) {
+                b.velX *=-1;
+                coll=true;
+            }
+            if ( // Ball Top/Bottom
+                b.posX > bx-(dmt/2) &&   // Ball on Left
+                b.posX < bx+width-(dmt/2)    // Ball on right
+            ) {
+                b.velY*=-1;
+                coll=true;
+            }
+            if (coll) {
+                b.collRefresh=10;
+                bricks[x][y] -= 1;
+            }
+        }
     }
 }

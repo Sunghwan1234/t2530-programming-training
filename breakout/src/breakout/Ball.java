@@ -6,11 +6,11 @@ import java.awt.Graphics;
 public class Ball {
     public double posX, posY;
     public double velX, velY;
-    public int contactrefresh = 0;
+    public int collRefresh = 0;
 
     public boolean playerContact = false; // Prevent ball from getting stuck inside the player
 
-    public static final int radius = 10;
+    public static final int diameter = 10;
 
     public Ball(double posX, double posY,double velX, double velY) {
         this.posX = posX; // 325
@@ -28,10 +28,9 @@ public class Ball {
     }
 
     public void collision(Player p) {
-        if (posX <= 0 || posX >= Game.width-Game.widthCorrection-radius) { // Left/Right
+        if (posX <= 0 || posX >= Game.width-Game.widthCorrection-diameter) { // Left/Right
             velX = -velX;}
         if (posY <= 0) {velY = -velY;} // Top
-
         if (posY >= Game.height) { // Bottom
             System.out.println("Game over, you lose!");
             System.exit(0);
@@ -39,8 +38,8 @@ public class Ball {
 
         if (
             posX >= p.posX && // Right of Plr
-            posX+radius <= p.posX + p.width && // Left of Plr
-            posY+radius >= p.posY && // Top of Plr
+            posX+diameter <= p.posX + p.width && // Left of Plr
+            posY+diameter >= p.posY && // Top of Plr
             posY <= p.posY + p.height // Bottom of Plr (When will we use this? We will never know)
         ) {
             if (!playerContact) {
@@ -52,10 +51,15 @@ public class Ball {
         } else {
             playerContact = false;
         }
+
+        if (collRefresh>0) {
+            collRefresh-=1;
+        }
+
     }
 
     public void render(Graphics g) {
         g.setColor(Color.WHITE);
-        g.fillOval((int) posX, (int) posY, radius, radius);
+        g.fillOval((int) posX, (int) posY, diameter, diameter);
     }
 }
