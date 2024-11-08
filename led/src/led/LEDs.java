@@ -1,4 +1,4 @@
-package hello;
+package led;
 
 import static java.lang.Math.floor;
 import static java.lang.Math.min;
@@ -34,15 +34,15 @@ public class LEDs {
     public void periodic() {
         //blink(50, 120, new Color(0,255,0),new Color(255,0,0));
         //rainbow(0.1,0.1,test);
-        rainbow(Renderer.Timer, 0.03, 0);
+        rainbow(Renderer.Timer, test, 0.03, 0);
         //print(Arrays.toString(LedRGBWData));
         pushData();
     }
-    public void rainbow(int Timer, double Change, int W) {
-        double rainbow = ((double) Timer/100) % 1;
+    public void rainbow(int timer, double speed, double change, int w) {
+        double rainbow = ((double) timer*speed/100) % 1;
         for (int i=0;i<NumberOfLeds-1;i++) {
             //setDataRGBW(i, Color.getColor(null, Color.HSBtoRGB((float) (rainbow-(i*Change)), (float) 1, (float) 1)), W);
-            setDataRGBW(i, Color.getHSBColor((float) (rainbow-(i*Change)+0.00001), (float) 1, (float) 1), W);
+            setDataRGBW(i, Color.getHSBColor((float) (rainbow-(i*change)+0.000001), (float) 1, (float) 1), w);
         }
         //setAllDataRGBW(rc,0);
     }
