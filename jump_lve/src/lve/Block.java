@@ -13,7 +13,7 @@ public class Block {
     private static final int Width = 20, Height = 20;
     public double posX=0, posY=430, dir=0, blocktype=10;
 
-    public int blocksplaced;
+    public static int blocksplaced;
 
     public Block() {}
     

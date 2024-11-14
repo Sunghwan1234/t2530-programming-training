@@ -30,7 +30,7 @@ public class Blocks {
 
     }
     public void periodic(Graphics g) {
-        blockc = Block.placedblocks;
+        blockc = Block.blocksplaced;
         for (int i = 0; i < blockc+1; i++) {
             
             render(g, i);
@@ -38,7 +38,7 @@ public class Blocks {
         
     }
     public void importLvdata(String file) throws FileNotFoundException { // This imports the level.txt file.
-        Scanner sc = new Scanner(new File(file)); // I use Scanner.
+        Scanner sc = new Scanner(new File(file));
         List<String> lines = new ArrayList<String>();
         while (sc.hasNextLine()) {lines.add(sc.nextLine());}
         String[] arr = lines.toArray(new String[0]); // The scanner output goes to String array arr[x][v]

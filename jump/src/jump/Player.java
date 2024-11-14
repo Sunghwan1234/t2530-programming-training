@@ -46,7 +46,7 @@ public class Player {
     public void gravity() {
         // Blocks gravity collision
         if ((posY < Game.WinHeight-20)) { // if not on the ground <430
-            velY += gravity*0.18;
+            velY += gravity*0.19;
             jumpable = false;
             orbcontact = 0;
         } else if ((posY-1 > Game.WinHeight-20) && gravity==1) { // if under the ground >431
