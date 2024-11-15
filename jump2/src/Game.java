@@ -10,38 +10,54 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements ActionListener, KeyListener { 
     // Initiate your variables here
-    public static final int width = 800, height = 600;
+    public static final int windowWidth = 1000, windowHeight = 600;
+    public static final int width = windowWidth, height = windowHeight-38;
+
+    public static int test=0;
 
     private final Timer timer;
 
     private final Player player;
 
-    boolean keyDown = false;
+    public static boolean keyDown = false;
 
     public Game() { // Initiate all your entities here
-        this.player = new Player();
+        player = new Player();
 
-        this.timer = new Timer(1, this);
-        this.timer.start();
+        timer = new Timer(1, this);
+        timer.start();
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
+        addKeyListener(this);
     }
     
     @Override
     public void paint(Graphics g) { // Render and execute all your entities here 
 
         // Draw background
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
+        g.setColor(Color.black);
+        g.fillRect(0, 0, windowWidth, windowHeight);
+        g.setColor(Color.white);
+        g.fillRect(0,height-20,width,20);
 
         player.periodic(g);
+
+        stringWriter(g, new String[] {
+            "test: " + Game.test,
+            "vel: " + player.velY,
+            "y: " + player.y
+        });
 
         g.dispose();
     }
 
+    public void stringWriter(Graphics g, String[] s) {
+        g.setColor(Color.white);
+        for (int i=0;i<s.length;i++) {g.drawString(s[i],12,16+i*10);}
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        timer.start();
         repaint();
     }
 
@@ -50,6 +66,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         switch(e.getKeyCode()) {
             case 32: // Space bar
                 keyDown = true;
+                test+=1;
                 break;
             default: break; 
         }
@@ -57,7 +74,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch(e.getKeyChar()) {
+        switch(e.getKeyCode()) {
             case 32: // Space bar
                 keyDown = false;
                 break;
@@ -66,6 +83,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 }
 

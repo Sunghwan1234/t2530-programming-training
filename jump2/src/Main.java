@@ -4,8 +4,8 @@ public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame();
 
-        window.setSize(Game.width, Game.height);
-        window.setResizable(false);
+        window.setSize(Game.windowWidth, Game.windowHeight);
+        window.setResizable(true);
 
         window.setTitle("jump2");
         
