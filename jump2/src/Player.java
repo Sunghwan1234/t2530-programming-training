@@ -1,18 +1,24 @@
 import java.awt.*;
+import java.awt.geom.*;
 
 public class Player {
-    public final int x = 40; public double y = Game.height-100;
+    public double width = 20, height = 20;
+    public int x = 50; public double y = Game.groundHeight-height;
     public double velY = 0;
     public int gravity = 1;
-    public int width = 20, height = 20;
     public int air = 0;
     public boolean jumpable = false;
 
-    public Player() {
+    public Player() {}
 
+    public Area getColArea() {
+        return new Area(new Rectangle2D.Double(x,y+height-1,width,1));
+    }
+    public Area getDeathArea() {
+        return new Area(new Rectangle2D.Double(x,y,width,height));
     }
 
-    public void periodic(Graphics g) {
+    public void tick(Graphics2D g) {
         jump();
         physics();
 
@@ -29,9 +35,9 @@ public class Player {
     }
 
     public void physics() {
-        if (y>Game.height-20-height-1) {
+        if (y>Game.groundHeight-height-1) {
             velY=0;
-            y=Game.height-20-height-1;
+            y=Game.groundHeight-height-1;
             jumpable = true;
 
         } else {
@@ -41,8 +47,9 @@ public class Player {
         y+=velY;
     }
 
-    public void paint(Graphics g) {
-        g.setColor(Color.green);
-        g.drawRect((int) x,(int) y,width,height);
+    public void paint(Graphics2D g) {
+        g.setPaint(Color.green);
+        g.setStroke(new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL));
+        g.drawRect((int) x,(int) y,(int)width,(int)height);
     }
 }

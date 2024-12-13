@@ -3,37 +3,33 @@ package lve;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import lve.Block;
-import lve.Blocks;
-
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.FileNotFoundException;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 
 public class Editor extends JPanel implements ActionListener, KeyListener{
-    public static final int WinWidth=750,WinHeight=500;
+    public static final int windowWidth=1200, windowHeight=600;
+    public static final int width = windowWidth, height = windowHeight-37;
+    public static int groundHeight = height-20;
+
     public static boolean KeyPressed[] = new boolean[100];
-    public static double ScreenX = 0;
+    public static double ScreenX=0,ScreenY=0;
 
     public static final boolean LevelImport = true;
 
     private final Timer timer;
 
     private final Blocks blocks;
-    private final Block block;
+    private final Placer placer;
 
     public Editor() {
         this.blocks = new Blocks();
-        this.block = new Block();
+        this.placer = new Placer();
 
         if (LevelImport) {
             try {
-                blocks.importLvdata("levelimport.txt");
-                Block.blocksplaced=blocks.blockc;
+                blocks.importLV(new File("levelimport.txt"));
+                Placer.blocksplaced=blocks.blocks;
             } catch (FileNotFoundException e) {e.printStackTrace();}
         }
 
@@ -41,21 +37,16 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         addKeyListener(this);
-new Timer(1, this);
-        this.timer.start();
 
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
-        addKeyListener(this);
+        this.timer.start();
     }
     @Override
     public void paint(Graphics g) {
         // BG and Ground
-        g.setColor(Color.black); g.fillRect(0, 0, WinWidth, WinHeight);
-        g.setColor(Color.white); g.drawRect(-1, WinHeight-50, WinWidth, 15);
+        g.setColor(Color.black); g.fillRect(0, 0, windowWidth, windowHeight);
+        g.setColor(Color.white); g.drawRect(-1, windowHeight-50, windowWidth, 15);
 
         // Running code
-        block.actions(blocks, g);
         //blocks.actions(g);
 
         // rendering
@@ -63,11 +54,11 @@ new Timer(1, this);
         g.setColor(Color.white);
         String[] write = {
             "ScreenX: " + ScreenX,
-            "Block X: " + block.posX,
-            "Block Y: " + block.posY,
-            "BlockType: "+block.blocktype,
-            "Block Rotation: "+block.dir,
-            "Block Count: "+blocks.blockc
+            "Block X: " + placer.posX,
+            "Block Y: " + placer.posY,
+            "BlockType: "+placer.blocktype,
+            "Block Rotation: "+placer.dir,
+            "Block Count: "+blocks.blocks
         };
         for (int i=0;i<write.length;i++) {g.drawString(write[i],12,16+i*14);}
 
@@ -87,6 +78,6 @@ new Timer(1, this);
         }
     @Override
     public void actionPerformed(ActionEvent e) {
-        timer.start(); repaint();
+        repaint();
     }
 }

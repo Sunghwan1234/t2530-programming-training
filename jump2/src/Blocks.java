@@ -1,14 +1,11 @@
-package lve;
-
 import java.awt.*;
-import java.util.List;
 import java.awt.geom.*;
-import java.io.FileNotFoundException;
-// do not use arraylist, it is garbage
-import java.util.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class Blocks {
     public final int width = 20, height = 20;
@@ -18,7 +15,7 @@ public class Blocks {
     public int blocks = 0;
     public int lastBlockN;
 
-    public Block b = new Block(100, Editor.groundHeight-height, 0, "b1");
+    public Block b = new Block(100, Game.groundHeight-height, 0, "b1");
 
     class Block {
         double x, y, r;
@@ -86,6 +83,19 @@ public class Blocks {
             g.setStroke(stroke);
             g.draw(outline);
         }
+        public boolean physics(Player p) {
+            
+            if (t=='b') {
+                if (areaCollide(getCollisionArea(), p.getColArea())) {
+                    p.y=y-p.height;
+                    p.velY=0;
+                    p.jumpable=true;
+                }
+            }
+            
+
+            return true;
+        };
     }
 
     public void importLV(File file) throws FileNotFoundException {
@@ -111,5 +121,17 @@ public class Blocks {
 
         // System.out.println(Arrays.deepToString(block));
         //System.out.println("Leveldata import complete with "+blocks+" blocks");
+    }
+
+    public void tick(Graphics2D g, Player p) {
+        scroll+=0.1;
+
+        b.physics(p);
+
+        render(g);
+    }
+
+    public void render(Graphics2D g) {
+        b.render(g);
     }
 }

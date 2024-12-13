@@ -10,19 +10,22 @@ import java.awt.event.KeyListener;
 
 public class Game extends JPanel implements ActionListener, KeyListener { 
     // Initiate your variables here
-    public static final int windowWidth = 1000, windowHeight = 600;
-    public static final int width = windowWidth, height = windowHeight-38;
+    public static final int windowWidth = 1200, windowHeight = 600;
+    public static final int width = windowWidth, height = windowHeight-37;
+    public static int groundHeight = height-20;
 
     public static int test=0;
 
     private final Timer timer;
 
     private final Player player;
+    private final Blocks blocks;
 
     public static boolean keyDown = false;
 
     public Game() { // Initiate all your entities here
         player = new Player();
+        blocks = new Blocks();
 
         timer = new Timer(1, this);
         timer.start();
@@ -33,19 +36,22 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     
     @Override
     public void paint(Graphics g) { // Render and execute all your entities here 
-
+        Graphics2D g2 = (Graphics2D) g;
         // Draw background
         g.setColor(Color.black);
         g.fillRect(0, 0, windowWidth, windowHeight);
         g.setColor(Color.white);
-        g.fillRect(0,height-20,width,20);
+        g.fillRect(0,groundHeight,width,20);
 
-        player.periodic(g);
+        
+        blocks.tick(g2, player);
+        player.tick(g2);
 
         stringWriter(g, new String[] {
             "test: " + Game.test,
             "vel: " + player.velY,
-            "y: " + player.y
+            "y: " + player.y,
+            "x: " + player.x
         });
 
         g.dispose();
@@ -68,6 +74,18 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                 keyDown = true;
                 test+=1;
                 break;
+            case 37: // LEFT
+                blocks.b.x-=1;
+                break;
+            case 38: // UP
+            blocks.b.y-=1;
+                break;
+            case 39: // RIGHT
+            blocks.b.x+=1;
+                break;
+            case 40: // DOWN
+            blocks.b.y+=1;
+                break;
             default: break; 
         }
     }
@@ -83,7 +101,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
 }
 
