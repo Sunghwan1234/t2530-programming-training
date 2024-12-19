@@ -15,10 +15,8 @@ public class Blocks {
     public float scroll = 0;
 
     public Block block[] = new Block[1000];
-    public int blocks = 0;
+    public int blockCount = 0;
     public int lastBlockN;
-
-    public Block b = new Block(100, Editor.groundHeight-height, 0, "b1");
 
     class Block {
         double x, y, r;
@@ -71,14 +69,13 @@ public class Blocks {
         }
         public void render(Graphics2D g) {
             double sx = SX();
-            switch (t) {
-                case 'b':
-                    paint = new GradientPaint((float)sx+width/2,(float)y,Color.white,(float)sx+width/2,(float)y+height,Color.black);
-                    fill = new Rectangle2D.Double(sx,y,width,height);
-                    stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
-                    outline = new Rectangle2D.Double(sx-1,y,width,height);
-                    break;
-                default: break;
+            if (t=='b'|| t=='1') {
+                paint = new GradientPaint((float)sx+width/2,(float)y,Color.white,(float)sx+width/2,(float)y+height,Color.black);
+                fill = new Rectangle2D.Double(sx,y,width,height);
+                stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
+                outline = new Rectangle2D.Double(sx-1,y,width,height);
+            } else {
+                return;
             }
             g.setPaint(paint);
             g.fill(fill);
@@ -98,18 +95,24 @@ public class Blocks {
         String[] blockdata;
         for (int t=0;t<arr.length;t++) {
             blockdata = arr[t].split(";",0);
-            block[blocks] = new Block(
+            block[blockCount] = new Block(
                 Double.parseDouble(blockdata[0])+400,
                 Double.parseDouble(blockdata[1]),
                 Double.parseDouble(blockdata[2]),
                 blockdata[3]);
             //System.out.println(Arrays.deepToString(blockdata));
 
-            if (block[blocks].x > block[lastBlockN].x) {lastBlockN = blocks;}
-            blocks += 1;
+            if (block[blockCount].x > block[lastBlockN].x) {lastBlockN = blockCount;}
+            blockCount += 1;
         }
 
         // System.out.println(Arrays.deepToString(block));
         //System.out.println("Leveldata import complete with "+blocks+" blocks");
+    }
+
+    public void render(Graphics2D g) {
+        for (int i=0;i<blockCount;i++) {
+            block[i].render(g);
+        }
     }
 }

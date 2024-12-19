@@ -6,10 +6,9 @@ import java.util.Arrays;
 
 public class Placer {
     private static final int width = 20, height = 20;
-    public double posX=0, posY=430, dir=0, blocktype=10;
 
-    double x, y, r;
-    char t, st;
+    double x=0, y=430, r=0;
+    String type="b1";
     Paint paint;
     Stroke stroke;
     Shape outline, fill;
@@ -17,6 +16,7 @@ public class Placer {
     public static int blocksplaced;
 
     public void render(Graphics2D g) {
+        char t=type.charAt(0), st=type.charAt(1);
         switch (t) {
             case 'b':
                 paint = new GradientPaint((float)x+width/2,(float)y,Color.white,(float)x+width/2,(float)y+height,Color.black);

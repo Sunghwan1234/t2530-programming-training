@@ -29,7 +29,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
         if (LevelImport) {
             try {
                 blocks.importLV(new File("levelimport.txt"));
-                Placer.blocksplaced=blocks.blocks;
+                Placer.blocksplaced=blocks.blockCount;
             } catch (FileNotFoundException e) {e.printStackTrace();}
         }
 
@@ -42,23 +42,25 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     }
     @Override
     public void paint(Graphics g) {
+        Graphics2D g2=(Graphics2D) g;
         // BG and Ground
         g.setColor(Color.black); g.fillRect(0, 0, windowWidth, windowHeight);
         g.setColor(Color.white); g.drawRect(-1, windowHeight-50, windowWidth, 15);
 
         // Running code
-        //blocks.actions(g);
+        blocks.render(g2);
+        placer.render(g2);
 
         // rendering
         // scores
         g.setColor(Color.white);
         String[] write = {
             "ScreenX: " + ScreenX,
-            "Block X: " + placer.posX,
-            "Block Y: " + placer.posY,
-            "BlockType: "+placer.blocktype,
-            "Block Rotation: "+placer.dir,
-            "Block Count: "+blocks.blocks
+            "Block X: " + placer.x,
+            "Block Y: " + placer.y,
+            "BlockType: "+placer.type,
+            "Block Rotation: "+placer.r,
+            "Block Count: "+blocks.blockCount
         };
         for (int i=0;i<write.length;i++) {g.drawString(write[i],12,16+i*14);}
 
