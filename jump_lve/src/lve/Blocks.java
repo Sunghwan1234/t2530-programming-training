@@ -2,6 +2,9 @@ package lve;
 
 import java.awt.*;
 import java.util.List;
+
+import lve.Editor.customPoint;
+
 import java.awt.geom.*;
 import java.io.FileNotFoundException;
 // do not use arraylist, it is garbage
@@ -14,13 +17,15 @@ public class Blocks {
     public final int width = 20, height = 20;
     public float scroll = 0;
 
-    public Block block[] = new Block[1000];
+    public Block block[] = new Block[1000]; // Block container List of Class Block
     public int blockCount = 0;
-    public int lastBlockN;
-
+    /**
+     * Block Class: x,y,r,type,s
+     * 
+     */
     class Block {
         double x, y, r;
-        char t, st;
+        char type, s;
         Paint paint;
         Stroke stroke;
         Shape outline, fill;
@@ -28,13 +33,13 @@ public class Blocks {
             this.x=x;
             this.y=y;
             this.r=r;
-            this.t=t.charAt(0);
-            this.st=t.charAt(1);
+            this.type = t.charAt(0);
+            this.s = t.charAt(1);
         }
         public double SX() {return x-scroll;}
         public Area getCollisionArea() {
             Area area = new Area();
-            switch (t) {
+            switch (type) {
                 case 'b':
                     area=new Area(new Rectangle2D.Double(SX(),y,width,height/3));
                 default: break;
@@ -43,7 +48,7 @@ public class Blocks {
         }
         public Area getDeathArea() {
             Area area = new Area();
-            switch (t) {
+            switch (type) {
                 case 'b':
                     area=new Area(new Rectangle2D.Double(SX(),y+1,width,height-1));
                 default: break;
@@ -69,43 +74,101 @@ public class Blocks {
         }
         public void render(Graphics2D g) {
             double sx = SX();
-            if (t=='b'|| t=='1') {
-                paint = new GradientPaint((float)sx+width/2,(float)y,Color.white,(float)sx+width/2,(float)y+height,Color.black);
-                fill = new Rectangle2D.Double(sx,y,width,height);
+            renderBlock(g,x,y,r,type,s);
+        }
+    }
+    public double[] rotatePoint(double x, double y, double r, double cx, double cy) {
+        double dx=(cx+width/2)-cx, dy=(cy+height/2)-cy; // Distance of x & y to center
+        double angle=Math.toRadians(r); // Angle in radians
+        double rx=cx+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
+        double ry=cy+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
+        return new double[] {rx,ry};
+    }
+    public int[][] returnIntArray(customPoint[] points) {
+        int[][] intpoints = new int[2][points.length];
+        for (int i=0;i<points.length;i++) {
+            intpoints[0][i] = (int) points[i].x;
+            intpoints[1][i] = (int) points[i].y;
+        }
+        return intpoints;
+    }
+    public void renderBlock(Graphics2D g, double x, double y, double r, char t, char s) {
+        float fx=(float)x, fy=(float)y;
+        int ix=(int)x, iy=(int)y;
+
+        customPoint center = new customPoint(x+width/2,y+height/2);
+
+        Paint paint;
+        Stroke stroke;
+        Shape outline, fill;
+        switch (t) {
+            case 'b': // Block  
+                paint = new GradientPaint(fx+width/2,fy,Color.white,fx+width/2,fy+height,Color.black);
+                fill = new Rectangle2D.Double(x,y,width,height);
                 stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
-                outline = new Rectangle2D.Double(sx-1,y,width,height);
-            } else {
+                outline = new Rectangle2D.Double(x-1,y,width,height);
+                break;
+            case 's': // Spike
+                customPoint[] points = new customPoint[] {
+                    new customPoint(x,y+height), // Left Bottom
+                    new customPoint(x+width/2,y), // Middle Top
+                    new customPoint(x+width,y+height) // Right Bottom
+                };
+                points = customPoint.rotateArray(r, center, points);
+
+                paint = new GradientPaint(fx+width/2,fy,Color.red,fx+width/2,fy+height,Color.darkGray);
+                fill = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1],3);
+                stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
+                outline = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1], 3);
+                break;
+            case 'p':
+                paint = new GradientPaint(fx+width/2,fy,Color.magenta,fx+width/2,fy+height,Color.pink);
+                fill = new Arc2D.Double(x,y,width,height,0,360,Arc2D.CHORD);
+                stroke = null;
+                outline = null;
+                break;
+            default:
                 return;
-            }
-            g.setPaint(paint);
-            g.fill(fill);
-            g.setPaint(Color.white);
+        }
+        g.setPaint(paint);
+        g.fill(fill);
+        g.setPaint(Color.white);
+        if (stroke!=null||outline!=null) {
             g.setStroke(stroke);
             g.draw(outline);
         }
+        
     }
-
+    /**
+     * Imports level data from a .txt file.
+     * Order:
+     * arr = [x;y;rotation;type,...]
+     * blockdata = [x,y,rotation,type]
+     */
     public void importLV(File file) throws FileNotFoundException {
+        blockCount=0;
+
         Scanner sc = new Scanner(file); // I use Scanner.
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         while (sc.hasNextLine()) {lines.add(sc.nextLine());}
-        String[] arr = lines.toArray(new String[0]); // The scanner output goes to String array arr[x][v]
-        // System.out.println(Arrays.deepToString(arr));
+        String[] arr = lines.toArray(String[]::new); // The scanner output goes to String array arr[x][v]
+        System.out.println(Arrays.deepToString(arr));
 
         String[] blockdata;
-        for (int t=0;t<arr.length;t++) {
-            blockdata = arr[t].split(";",0);
-            block[blockCount] = new Block(
-                Double.parseDouble(blockdata[0])+400,
-                Double.parseDouble(blockdata[1]),
-                Double.parseDouble(blockdata[2]),
-                blockdata[3]);
-            //System.out.println(Arrays.deepToString(blockdata));
+        for (String arr1 : arr) { // For every item in arr (that contains x;y;rotation;type)
+            blockdata = arr1.split(";", 0); // The String of x;y;rotation;type gets split to array blockdata[0-3]
 
-            if (block[blockCount].x > block[lastBlockN].x) {lastBlockN = blockCount;}
+            int blockTypeIndex = Character.getNumericValue(blockdata[3].charAt(0)) - 1;
+            String blocktype = Editor.BLOCK_TYPES[blockTypeIndex] + blockdata[3].charAt(1);
+            System.out.println(blocktype);
+            block[blockCount] = new Block( // Creates the Block object!
+                    Double.parseDouble(blockdata[0])+400,
+                    Double.parseDouble(blockdata[1]),
+                    Double.parseDouble(blockdata[2]),
+                    blocktype);
+            //System.out.println(Arrays.deepToString(blockdata));
             blockCount += 1;
         }
-
         // System.out.println(Arrays.deepToString(block));
         //System.out.println("Leveldata import complete with "+blocks+" blocks");
     }

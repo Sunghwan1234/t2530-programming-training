@@ -2,13 +2,11 @@ package lve;
 
 import javax.swing.JFrame;
 
-import lve.Editor;
-
 public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame();
 
-        window.setSize(Editor.windowWidth, Editor.windowHeight);
+        window.setSize(Editor.WIN_WIDTH, Editor.WIN_HEIGHT);
         window.setResizable(false);
         window.setTitle("Jump Level Editor");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,6 +14,5 @@ public class Main {
         window.add(new Editor());
 
         window.setVisible(true);
-        
-    }   
+    }
 }

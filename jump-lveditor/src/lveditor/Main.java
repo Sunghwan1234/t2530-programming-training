@@ -2,8 +2,6 @@ package lveditor;
 
 import javax.swing.JFrame;
 
-import lveditor.Editor;
-
 public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame();
