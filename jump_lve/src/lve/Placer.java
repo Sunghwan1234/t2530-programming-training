@@ -8,7 +8,6 @@ public class Placer {
     private static final int width = 20, height = 20;
 
     double x=0, y=430, r=0;
-    String type = "b0";
     int[] blockType = {0,0};
 
     Paint paint;
@@ -21,7 +20,7 @@ public class Placer {
     public static int blocksplaced;
 
     public char[] getCharTypes() {
-        type = Editor.BLOCK_TYPES[blockType[0]]+blockType[1];
+        String type = Editor.BLOCK_TYPES[blockType[0]]+blockType[1];
         char[] types = {type.charAt(0),type.charAt(1)};
         return types;
     }
@@ -36,7 +35,7 @@ public class Placer {
     }
 
     public void actions(Blocks blocks, Graphics2D g) {
-        int KeyActionKeys[] = {4, 20,23,45,22, 31,24, 37,38,39,40}; // Space,A,D,Z,C,Q,E,Left,Up,Right,Down
+        int KeyActionKeys[] = {4, 20,23,45,22, 81,69, 37,38,39,40,87,65,83,68}; // Space,A,D,Z,C, Q,E,Left,Up,Right,Down,Shift,WASD
         for (int i=0;i<KeyActionKeys.length;i++) {
             int actionkeyN = KeyActionKeys[i];
             if (Editor.KeyPressed[actionkeyN] && !keypressed[actionkeyN]) {
@@ -46,12 +45,16 @@ public class Placer {
                     case 23: blockType[0]--; break; // D
                     case 45: blockType[1]++; break; // Z
                     case 22: blockType[1]--; break; // C
-                    case 31: r-=90; if (r==-90) {r=270;} break; // Q
-                    case 24: r+=90; if (r==360) {r=0;} break; // E
-                    case 37: x-=20; break; // Left
-                    case 38: y-=20; break; // Up
-                    case 39: x+=20; break; // Right
-                    case 40: y+=20; break; // Down
+                    case 81: r-=90; if (r<0) {r=270;} break; // Q
+                    case 69: r+=90; if (r>=360) {r=0;} break; // E
+                    case 37: Editor.ScreenX-=20; if (Editor.KeyPressed[16] /* Shift Key */) {continue;} else {break;}  // Left
+                    case 38: Editor.ScreenY-=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // Up
+                    case 39: Editor.ScreenX+=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // Right
+                    case 40: Editor.ScreenY+=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // Down
+                    case 87: y-=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // W
+                    case 65: x-=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // A
+                    case 83: y+=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // S
+                    case 68: x+=20; if (Editor.KeyPressed[16]) {continue;} else {break;}  // D
                     
                     default:break;
                 }

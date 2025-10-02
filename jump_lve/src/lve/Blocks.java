@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 
 public class Blocks {
     public final int width = 20, height = 20;
-    public float scroll = 0;
 
     public Block block[] = new Block[1000]; // Block container List of Class Block
     public int blockCount = 0;
@@ -36,12 +35,12 @@ public class Blocks {
             this.type = t.charAt(0);
             this.s = t.charAt(1);
         }
-        public double SX() {return x-scroll;}
+        public customPoint rp() {return new customPoint(x-Editor.ScreenX,y-Editor.ScreenY);}
         public Area getCollisionArea() {
             Area area = new Area();
             switch (type) {
                 case 'b':
-                    area=new Area(new Rectangle2D.Double(SX(),y,width,height/3));
+                    area=new Area(new Rectangle2D.Double(rp().x,rp().y,width,height/3));
                 default: break;
             }
             return area;
@@ -50,7 +49,7 @@ public class Blocks {
             Area area = new Area();
             switch (type) {
                 case 'b':
-                    area=new Area(new Rectangle2D.Double(SX(),y+1,width,height-1));
+                    area=new Area(new Rectangle2D.Double(rp().x,rp().y+1,width,height-1));
                 default: break;
             }
             return area;
@@ -73,8 +72,7 @@ public class Blocks {
             return collide;
         }
         public void render(Graphics2D g) {
-            double sx = SX();
-            renderBlock(g,x,y,r,type,s);
+            renderBlock(g,rp().x,rp().y,r,type,s);
         }
     }
     public double[] rotatePoint(double x, double y, double r, double cx, double cy) {
@@ -93,20 +91,31 @@ public class Blocks {
         return intpoints;
     }
     public void renderBlock(Graphics2D g, double x, double y, double r, char t, char s) {
+
+        Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
+        int S = Character.getNumericValue(s)-1;
+
         float fx=(float)x, fy=(float)y;
         int ix=(int)x, iy=(int)y;
 
         customPoint center = new customPoint(x+width/2,y+height/2);
 
-        Paint paint;
-        Stroke stroke;
-        Shape outline, fill;
+        Stroke stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
         switch (t) {
-            case 'b': // Block  
-                paint = new GradientPaint(fx+width/2,fy,Color.white,fx+width/2,fy+height,Color.black);
-                fill = new Rectangle2D.Double(x,y,width,height);
-                stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
-                outline = new Rectangle2D.Double(x-1,y,width,height);
+            case 'b': // Block
+                customPoint[] gradient = new customPoint[] {
+                    new customPoint(fx+width/2,fy), // Top middle
+                    new customPoint(fx+width/2,fy+height) // Bottom middle
+                };
+                gradient = customPoint.rotateArray(r, center, gradient);
+
+                g.setPaint(new GradientPaint(
+                    (float) gradient[0].x, (float) gradient[0].y, Color.white, // at Top middle
+                    (float) gradient[1].x, (float) gradient[1].y, Color.black // at Bottom middle
+                ));
+                g.fill(new Rectangle2D.Double(x,y,width,height));
+                g.setStroke(stroke);
+                g.draw(new Rectangle2D.Double(x-1,y,width,height));
                 break;
             case 's': // Spike
                 customPoint[] points = new customPoint[] {
@@ -115,27 +124,18 @@ public class Blocks {
                     new customPoint(x+width,y+height) // Right Bottom
                 };
                 points = customPoint.rotateArray(r, center, points);
+                Polygon poly = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1],3);
 
-                paint = new GradientPaint(fx+width/2,fy,Color.red,fx+width/2,fy+height,Color.darkGray);
-                fill = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1],3);
-                stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
-                outline = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1], 3);
+                g.setPaint(new GradientPaint(fx+width/2,fy,Color.red,fx+width/2,fy+height,Color.white));
+                g.fill(poly);
+                g.setStroke(stroke);
+                g.draw(poly);
                 break;
-            case 'p':
-                paint = new GradientPaint(fx+width/2,fy,Color.magenta,fx+width/2,fy+height,Color.pink);
-                fill = new Arc2D.Double(x,y,width,height,0,360,Arc2D.CHORD);
-                stroke = null;
-                outline = null;
+            case 'p': // Pad
+                g.setPaint(colors[S]);
+                g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
                 break;
-            default:
-                return;
-        }
-        g.setPaint(paint);
-        g.fill(fill);
-        g.setPaint(Color.white);
-        if (stroke!=null||outline!=null) {
-            g.setStroke(stroke);
-            g.draw(outline);
+            default: return;
         }
         
     }

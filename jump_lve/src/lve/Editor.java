@@ -4,13 +4,16 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
 
 public class Editor extends JPanel implements ActionListener, KeyListener{
     public static final int WIN_WIDTH=1200, WIN_HEIGHT=600;
     public static final int WIDTH = WIN_WIDTH, HEIGHT = WIN_HEIGHT-37;
-    public static int groundHeight = HEIGHT-20;
+    public static final int groundHeight = 430+20; // 20 is block height
 
     public static boolean KeyPressed[] = new boolean[100];
     public static double ScreenX=0, ScreenY=0;
@@ -22,7 +25,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     private final Timer timer;
     private final Blocks blocks;
     private final Placer placer;
-
+    /** Custom Point class with rotation capabilities! */
     public static class customPoint {
         double x, y;
         public customPoint(double x, double y) {
@@ -44,6 +47,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
             this.x=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
             this.y=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
         }
+        /** Rotates an array of points by angle r from centerpoint c */
         static customPoint[] rotateArray(double r, customPoint c, customPoint[] p) {
             customPoint[] rp = new customPoint[p.length];
             for (int i=0;i<p.length;i++) {rp[i] = p[i].rotate(r, c);}
@@ -81,7 +85,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
         Graphics2D g2=(Graphics2D) g;
         // BG and Ground
         g.setColor(Color.black); g.fillRect(0, 0, WIN_WIDTH, WIN_HEIGHT);
-        g.setColor(Color.white); g.drawRect(-1, WIN_HEIGHT-50, WIN_WIDTH, 15);
+        g.setColor(Color.white); g.drawRect(-1, (int) (groundHeight-ScreenY), WIN_WIDTH, 15);
 
         // Running code
         placer.actions(blocks, g2);
@@ -95,7 +99,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
             "ScreenX: " + ScreenX,
             "Block X: " + placer.x,
             "Block Y: " + placer.y,
-            "BlockType: "+placer.type,
+            "BlockType: "+placer.getCharTypes()[0]+placer.getCharTypes()[1],
             "Block Rotation: "+placer.r,
             "Block Count: "+blocks.blockCount
         };
@@ -109,6 +113,9 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     @Override
         public void keyPressed(KeyEvent e) { // - - - - - - - - - - CONTROLS - - - - - - - - - - \\
            KeyPressed[e.getKeyCode()] = true;
+
+
+
            System.out.println("KeyPressed: "+e.getKeyCode());
         }
     
