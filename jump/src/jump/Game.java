@@ -13,15 +13,14 @@ import java.io.FileNotFoundException;
 
 
 public class Game extends JPanel implements ActionListener, KeyListener {
+    public static final int WIN_WIDTH = 750, WIN_HEIGHT = 450+50;
+    public static final int GROUND_HEIGHT = 430; // 450
+    public static boolean jumpKey = false;
 
-    public static final int WINDOW_WIDTH = 750, WINDOW_HEIGHT = 500;
-    public static final int WinWidth = 750, WinHeight = 450;
-    public static boolean JumpKeyDown;
+    public static final boolean IMPORT_LV = true; // DEBUG LVDATA OFF / ON SWITCH
+    public static final boolean DEBUG = false;
 
-    public static final boolean useleveldata = true; // DEBUG LVDATA OFF / ON SWITCH
-    public static final boolean debug = false;
-
-    public static boolean play = true;
+    public static boolean inPlay = true;
 
     private final Player player;
 
@@ -31,8 +30,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     private final Sound sound;
 
     public Game() { // - - - - - - - - VARIABLES at game start - - - - - - - - \\
-        this.blocks = new Blocks(WinHeight);
-        if (useleveldata) {
+        this.blocks = new Blocks(WIN_HEIGHT);
+        if (IMPORT_LV) {
             try {
                 this.blocks.importLvdata("Level.txt");
             } catch (FileNotFoundException e) {
@@ -46,32 +45,23 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         this.sound = new Sound("Endless_Night.wav");
         this.sound.play();
 
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        addKeyListener(this);
+
         this.timer = new Timer(1, this);
         this.timer.start();
 
         System.out.println("All Spawning/Variables successful");
-
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
-        addKeyListener(this);
-
-        new Timer(1, this);
-        this.timer.start();
-
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
-        addKeyListener(this);
     }
 
     @Override
     public void paint(Graphics g) { // draw and do crap, once per tick 
 
         // Draw background
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        g.setColor(Color.BLACK); g.fillRect(0, 0, WIN_WIDTH, WIN_HEIGHT);
         // Draw GROUND
-        g.setColor(Color.WHITE);
-        g.fillRect(0, WinHeight, WINDOW_WIDTH, 15); // 0, 450
+        g.setColor(Color.WHITE); g.fillRect(0, GROUND_HEIGHT+20, WIN_WIDTH, 15); // 0, 450
 
         // Run Physics
         player.update();
@@ -90,31 +80,27 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         };
         for (int i=0;i<write.length;i++) {g.drawString(write[i],12,16+i*10);}
         g.dispose();
-
-        
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) { // - - - - - - - - - - CONTROLS - - - - - - - - - - \\
         // Left arrow: 37
         switch(e.getKeyCode()) {
             case 32: // Space bar
-                JumpKeyDown = true;
+                jumpKey = true;
                 break;
             default: // Everything else
                 break; 
         }
     }
-
     @Override
     public void keyReleased(KeyEvent e) {
         switch(e.getKeyCode()) {
             case 32: // Space bar
-                JumpKeyDown = false;
+                jumpKey = false;
                 break;
             default:
                 break;
@@ -124,7 +110,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) { // timer thingy
         timer.start();
-
         repaint();
     }
 }

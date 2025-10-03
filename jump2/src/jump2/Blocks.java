@@ -1,9 +1,9 @@
-package lve;
+package jump2;
 
 import java.awt.*;
 import java.util.List;
 
-import lve.Editor.CPoint;
+import jump2.Game.CPoint;
 
 import java.awt.geom.*;
 import java.io.FileNotFoundException;
@@ -18,6 +18,8 @@ public class Blocks {
 
     public Block block[] = new Block[1000]; // Block container List of Class Block
     public int blockCount = 0;
+
+    public int scroll = 0;
     /**
      * Block Class: x,y,r,type,s
      * 
@@ -35,7 +37,7 @@ public class Blocks {
             this.type = t.charAt(0);
             this.s = t.charAt(1);
         }
-        public CPoint rp() {return new CPoint(x-Editor.ScreenX,y-Editor.ScreenY);}
+        public CPoint rp() {return new CPoint(x-scroll,y);}
         public Area getCollisionArea() {
             Area area = new Area();
             switch (type) {
@@ -91,7 +93,6 @@ public class Blocks {
         return intpoints;
     }
     public void renderBlock(Graphics2D g, double x, double y, double r, char t, char s) {
-
         Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
         int S = Character.getNumericValue(s);
 
@@ -168,7 +169,7 @@ public class Blocks {
             blockdata = arr1.split(";", 0); // The String of x;y;rotation;type gets split to array blockdata[0-3]
 
             int blockTypeIndex = Character.getNumericValue(blockdata[3].charAt(0)) - 1;
-            String blocktype = Editor.BLOCK_TYPES[blockTypeIndex] + blockdata[3].charAt(1);
+            String blocktype = Game.BLOCK_TYPES[blockTypeIndex] + blockdata[3].charAt(1);
             System.out.println(blocktype);
             block[blockCount] = new Block( // Creates the Block object!
                     Double.parseDouble(blockdata[0])+400,
@@ -182,9 +183,10 @@ public class Blocks {
         //System.out.println("Leveldata import complete with "+blocks+" blocks");
     }
 
-    public void render(Graphics2D g) {
+    public void tick(Graphics2D g, Player player) {
         for (int i=0;i<blockCount;i++) {
             block[i].render(g);
+            
         }
     }
 }

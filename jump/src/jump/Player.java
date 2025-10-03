@@ -16,10 +16,10 @@ public class Player {
         this.posY = posY;
     }
     public void jump() {
-        if (keycooldown && orbcontact==0 && !Game.JumpKeyDown) {
+        if (keycooldown && orbcontact==0 && !Game.jumpKey) {
             keycooldown = false;
         }
-        if (Game.JumpKeyDown) {
+        if (Game.jumpKey) {
             if (!(orbcontact==0) && !keycooldown) {
                 posY -= gravity;
                 switch (orbcontact) {
@@ -45,19 +45,19 @@ public class Player {
     }
     public void gravity() {
         // Blocks gravity collision
-        if ((posY < Game.WinHeight-20)) { // if not on the ground <430
+        if ((posY < Game.GROUND_HEIGHT)) { // if not on the ground <430
             velY += gravity*0.19;
             jumpable = false;
             orbcontact = 0;
-        } else if ((posY-1 > Game.WinHeight-20) && gravity==1) { // if under the ground >431
+        } else if ((posY > Game.GROUND_HEIGHT-20+1) && gravity==1) { // if under the ground >431
             velY = 0;
             posY -= 1;
-            posY = 430;
+            posY = Game.GROUND_HEIGHT;
             jumpable = true;  
         }
     }
     public void update () {
-        if (Game.play) {
+        if (Game.inPlay) {
             this.jump();
             this.gravity();
             posX += velX; posY += velY;

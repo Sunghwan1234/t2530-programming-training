@@ -1,10 +1,12 @@
+package jump2;
+
 import javax.swing.JFrame;
 
 public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame();
 
-        window.setSize(Game.windowWidth, Game.windowHeight);
+        window.setSize(Game.WIN_WIDTH, Game.windowHeight);
         window.setResizable(true);
 
         window.setTitle("jump2");

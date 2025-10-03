@@ -18,7 +18,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     public static boolean KeyPressed[] = new boolean[100];
     public static double ScreenX=0, ScreenY=0;
 
-    public static final String[] BLOCK_TYPES = {"b","s","p","o"};
+    public static final String[] BLOCK_TYPES = {"b","s","o","p"};
 
     public static final boolean IMPORT_LEVEL = true;
 
@@ -26,38 +26,38 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     private final Blocks blocks;
     private final Placer placer;
     /** Custom Point class with rotation capabilities! */
-    public static class customPoint {
+    public static class CPoint {
         double x, y;
-        public customPoint(double x, double y) {
+        public CPoint(double x, double y) {
             this.x = x;
             this.y = y;
         }
         double dist(double dx, double dy) {return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));}
-        double dist(customPoint p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
-        customPoint rotate(double r, customPoint c) {
+        double dist(CPoint p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
+        CPoint rotate(double r, CPoint c) {
             double dx=x-c.x, dy=y-c.y; // Distance of x & y to center
             double angle=Math.toRadians(r); // Angle in radians
             double rx=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
             double ry=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
-            return new customPoint(rx, ry);
+            return new CPoint(rx, ry);
         }
-        void rotateSelf(double r, customPoint c) {
+        void rotateSelf(double r, CPoint c) {
             double dx=c.x-c.x, dy=c.y-c.y; // Distance of x & y to center
             double angle=Math.toRadians(r); // Angle in radians
             this.x=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
             this.y=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
         }
         /** Rotates an array of points by angle r from centerpoint c */
-        static customPoint[] rotateArray(double r, customPoint c, customPoint[] p) {
-            customPoint[] rp = new customPoint[p.length];
+        static CPoint[] rotateArray(double r, CPoint c, CPoint[] p) {
+            CPoint[] rp = new CPoint[p.length];
             for (int i=0;i<p.length;i++) {rp[i] = p[i].rotate(r, c);}
             return rp;
         }
 
-        customPoint translate(double dx, double dy) {return new customPoint(x+dx, y+dy);}
-        customPoint scale(double s, customPoint c) {return new customPoint(c.x+(x-c.x)*s, c.y+(y-c.y)*s);}
-        customPoint scale(double sx, double sy, Point c) {return new customPoint(c.x+(x-c.x)*sx, c.y+(y-c.y)*sy);}
-        customPoint midpoint(customPoint p) {return new customPoint((x+p.x)/2, (y+p.y)/2);}
+        CPoint translate(double dx, double dy) {return new CPoint(x+dx, y+dy);}
+        CPoint scale(double s, CPoint c) {return new CPoint(c.x+(x-c.x)*s, c.y+(y-c.y)*s);}
+        CPoint scale(double sx, double sy, Point c) {return new CPoint(c.x+(x-c.x)*sx, c.y+(y-c.y)*sy);}
+        CPoint midpoint(CPoint p) {return new CPoint((x+p.x)/2, (y+p.y)/2);}
         @Override
         public String toString() {return "("+x+", "+y+")";}
     }

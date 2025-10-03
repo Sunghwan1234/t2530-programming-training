@@ -24,11 +24,11 @@ public class Blocks {
     // BLOCK: 2
     public double block[][] = new double[1000][4];
     public int blocks = 0;
-    public int lastblock = 0;
+    public int lastblock = 0; // Required for winning condition
     public double defY;
 
     public Blocks(int defY) { // setup and nothing
-        this.defY = defY; // 450
+        this.defY = defY; // 450 (-20
     }
 
     public class Block {
@@ -45,13 +45,13 @@ public class Blocks {
         
     }
     public void die(String errmsg) {
-        if (Game.play) {
+        if (Game.inPlay) {
             System.out.println(" - - - - - - - ");
             System.out.println(" > you  died < "); // DEATH
             System.out.println(errmsg);
             System.out.println(" - - - - - - - ");
-            Game.play = false;
-            //if (!Game.debug) {System.exit(1);}
+            Game.inPlay = false;
+            if (!Game.DEBUG) {System.exit(1);}
         }
     }
     public boolean checkCol(double[] o1, double[] o2) {
@@ -228,13 +228,13 @@ public class Blocks {
         //System.out.println(Arrays.deepToString(block));
     }
 
-    public void importLvdata(String file) throws FileNotFoundException { // This imports the level.txt file.
+    /** Imports the level.txt file. */
+    public void importLvdata(String file) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(file)); // I use Scanner.
         List<String> lines = new ArrayList<String>();
         while (sc.hasNextLine()) {lines.add(sc.nextLine());}
         String[] arr = lines.toArray(new String[0]); // The scanner output goes to String array arr[x][v]
         // System.out.println(Arrays.deepToString(arr));
-
         String[] blockdata;
         for (int t=0;t<arr.length;t++) {
             blockdata = arr[t].split(";",0);
@@ -243,18 +243,15 @@ public class Blocks {
             block[blocks][2] = Double.parseDouble(blockdata[2]);
             block[blocks][3] = Double.parseDouble(blockdata[3]);
             //System.out.println(Arrays.deepToString(blockdata));
-
             if (block[blocks][0] > block[lastblock][0]) {lastblock = blocks;}
-
             blocks += 1;
         }
-
         // System.out.println(Arrays.deepToString(block));
         System.out.println("Leveldata import complete with "+blocks+" blocks");
     }
     public void render(Graphics g, Player p) { // RENDERING - - - - - - - - - - - - - - - - - - - - - - - - -
-        for (int i = 0; i < blocks; i++) { if (Game.play) {block[i][0] -= 2;} // moving the block
-            if (!(block[i][3] == 0) && block[i][0] < Game.WinWidth && block[i][0] > -40) { // Invis block, blocks outside the window
+        for (int i = 0; i < blocks; i++) { if (Game.inPlay) {block[i][0] -= 2;} // moving the block
+            if (!(block[i][3] == 0) && block[i][0] < Game.WIN_WIDTH && block[i][0] > -40) { // Invis block, blocks outside the window
                 if (block[i][0] < p.posX+60 && block[i][0] > p.posX-60) { // only if the object is close to the player
                     //this.collision(block[i][0], block[i][1], block[i][2],block[i][3], p); // Collision
                     //this.collision()
