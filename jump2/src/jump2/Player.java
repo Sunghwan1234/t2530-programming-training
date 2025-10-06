@@ -19,9 +19,9 @@ public class Player {
     public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX,posY,width,height));}
 
     public void tick(Graphics2D g) {
-        if (posY > Game.groundHeight-height-1) { // Under Ground
+        if (posY > Game.groundHeight-1) { // Under Ground
             velY=0;
-            posY=Game.groundHeight-height-1;
+            posY=Game.groundHeight-1;
             jumpable = true;
         } else {
             velY+=0.19;
