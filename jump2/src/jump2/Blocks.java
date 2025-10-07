@@ -27,6 +27,7 @@ public class Blocks {
     class Block {
         double bx, by, r;
         char type, s;
+        Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
         public Block(double x, double y, double r, String t) {
             this.bx=x;
             this.by=y;
@@ -40,6 +41,11 @@ public class Blocks {
             switch (type) {
                 case 'b':
                     area=new Area(new Rectangle2D.Double(rx(),by,width,height/3));
+                case 'o': // Orb
+                    int extra = 3;
+                    area=new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2))); break;
+                case 'p': // Pad
+                    area = new Area(new Rectangle2D.Double(rx()+3,by+height-(height/4),width-6,height/4)); break;
                 default: break;
             }
             return area;
@@ -49,13 +55,13 @@ public class Blocks {
             switch (type) {
                 case 'b':
                     area=new Area(new Rectangle2D.Double(rx(),by+1,width,height-1)); break;
-                case 's':
+                case 's': // Spike
                     CPoint center = new CPoint(rx()+width/2,by+height/2);
-                    CPoint leftTop = new CPoint(bx+7, by-14);
-                    CPoint rightBottom = new CPoint(bx+13, by);
+                    CPoint leftTop = new CPoint(rx()-7, by-14);
+                    CPoint rightBottom = new CPoint(rx()+7, by);
                     leftTop.rotateSelf(r, center);
                     rightBottom.rotateSelf(r, center);
-                break;
+                    area = new Area(new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y)); break;
             default:break;
             }
             return area;
@@ -75,8 +81,11 @@ public class Blocks {
             return collide;
         }
         public void collide(Player p) {
+            if (areaCollide(getDeathArea(), p.getDeathArea())) { // Death
+                System.out.println("Death");
+                Game.inPlay = false;
+            }
             if (areaCollide(getCollisionArea(), p.getColArea())) {
-                System.out.println("Collide");
                 switch (type) {
                     case 'b': // Block
                         p.velY=0;
@@ -84,24 +93,28 @@ public class Blocks {
                         p.jumpable = true;
                         break;
                     case 'o': // Orb
-                        p.orbContact = Character.getNumericValue(s);
+                        System.out.println("Orb: "+s);
+                        p.orbContact = s;
                         break;
                     case 'p': // Pad
-                        if (p.velY > 0) {p.velY = 0;}
-                        p.posY = by - p.height + (height/4);
-                        p.jumpable = true;
-                        break;
+                        switch (s) {
+                            case '0': // Yellow
+                                p.velY = -5*p.gravity; break;
+                            case '1':
+                                p.velY = -3.8*p.gravity; break;
+                            case '2':
+                                p.velY = -6.7*p.gravity; break;
+                            case '3':
+                                p.gravity *= -1;
+                                p.velY = p.gravity*2; break;
+                            default:break;
+                        } break;
                     default: break;
                 }
-            }
-            if (areaCollide(getDeathArea(), p.getDeathArea())) {
-                System.out.println("Death");
-                Game.inPlay = false;
             }
         }
         public void render(Graphics2D g) {
             double x=rx(), y=by;
-            Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
             int S = Character.getNumericValue(s);
             float fx=(float)x, fy=(float)y; int ix=(int)x, iy=(int)y;
             CPoint center = new CPoint(x+width/2,y+height/2);
@@ -150,6 +163,8 @@ public class Blocks {
                     break;
                 default: return;
             }
+            g.setPaint(Color.magenta);
+            g.fill(getDeathArea().getBounds2D()); // Debug death area
         }
     }
     public double[] rotatePoint(double x, double y, double r, double cx, double cy) {
@@ -201,7 +216,7 @@ public class Blocks {
     public void tick(Graphics2D g, Player player) {
         for (int i=0;i<blockCount;i++) {
             block[i].render(g);
-            block[1].collide(player);
+            block[i].collide(player);
         }
     }
 }

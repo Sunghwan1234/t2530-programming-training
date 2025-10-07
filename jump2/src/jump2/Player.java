@@ -11,43 +11,45 @@ public class Player {
     //public int air = 0;
     public boolean jumpable = false;
     public boolean orbCooldown = false;
-    public int orbContact = 0;
+    public char orbContact = ' '; // ' ' = none, '0' = yellow, '1' = pink, '2' = red, '3' = cyan
 
     public Player() {}
 
-    public Area getColArea() {return new Area(new Rectangle2D.Double(posX,posY+height-1,width,1));}
-    public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX,posY,width,height));}
+    public Area getColArea() {return new Area(new Rectangle2D.Double(posX-2,posY+height,width+2,1));} // Collision area (top of player)
+    public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX,posY,width+1,height));}
 
     public void tick(Graphics2D g) {
         if (posY > Game.groundHeight-1) { // Under Ground
             velY=0;
             posY=Game.groundHeight-1;
             jumpable = true;
+            orbContact = ' ';
         } else {
             velY+=0.19;
             jumpable = false;
         }
 
-        if (orbCooldown && orbContact==0 && !Game.jumpKey) {orbCooldown = false;}
+        if (orbCooldown && !Game.jumpKey) {orbCooldown = false;}
         if (Game.jumpKey) {
-            if (!(orbContact==0) && !orbCooldown) {
+            if (jumpable) { // Normal Jump
+                posY -= gravity*2;
+                velY = gravity*-3.8;
+                orbCooldown = true;
+            } else if (!(orbContact==0) && !orbCooldown) {
                 posY -= gravity;
                 switch (orbContact) {
-                    case 30: // YELLOW
+                    case '0': // YELLOW
                         velY = gravity*-4.1; break;
-                    case 31: // PINK
+                    case '1': // PINK
                         velY = gravity*-3.4; break;
-                    case 32: // RED
+                    case '2': // RED
                         velY = gravity*-6.7; break;
-                    case 33: // CYAN
+                    case '3': // CYAN
                         gravity*=-1;
                         velY = gravity*3; break;
                     default:break;
                 }
-                orbCooldown = true;
-            } else if (jumpable) {
-                posY -= gravity*2;
-                velY = gravity*-3.8;
+                orbContact = ' ';
                 orbCooldown = true;
             }
         }
@@ -59,6 +61,8 @@ public class Player {
     public void paint(Graphics2D g) {
         g.setPaint(Color.green);
         g.setStroke(new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL));
-        g.drawRect((int) posX,(int) posY,(int)width,(int)height);
+        g.draw(new Rectangle2D.Double(posX,posY,width,height));
+        //g.setPaint(Color.cyan);
+        //g.fill(getDeathArea().getBounds2D()); // Debug death area
     }
 }
