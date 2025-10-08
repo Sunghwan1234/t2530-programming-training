@@ -29,6 +29,7 @@ public class Blocks {
         char type, s;
         Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
         boolean killer=false;
+        boolean disabled=false;
         public Block(double x, double y, double r, String t) {
             this.bx=x;
             this.by=y;
@@ -82,14 +83,12 @@ public class Blocks {
             return collide;
         }
         public void collide(Player p) {
-            if (areaCollide(getCollisionArea(), p.getColArea())) {
+            if (areaCollide(getCollisionArea(), p.getColArea()) && !disabled) { // Collision
                 switch (type) {
                     case 'b': // Block
-                        p.velY=0;
+                        p.onGround = true;
                         p.posY=by-p.height;
-                        p.jumpable = true;
-                        p.orbContact = ' ';
-                        p.keyCooldown = false;
+                        
                         break;
                     case 'o': // Orb
                         System.out.println("Orb: "+s);
@@ -107,7 +106,9 @@ public class Blocks {
                                 p.gravity *= -1;
                                 p.velY = p.gravity*2; break;
                             default:break;
-                        } break;
+                        }
+                        disabled = true;
+                        break;
                     default: break;
                 }
             }

@@ -8,36 +8,41 @@ public class Player {
     public int posX = 50; public double posY = Game.groundHeight-height;
     public double velY = 0;
     public int gravity = 1;
-    //public int air = 0;
+    public int air = 0;
+    public boolean onGround = false;
     public boolean jumpable = false;
     public boolean keyCooldown = false;
     public char orbContact = ' '; // ' ' = none, '0' = yellow, '1' = pink, '2' = red, '3' = cyan
 
     public Player() {}
 
-    public Area getColArea() {return new Area(new Rectangle2D.Double(posX-1,posY+1,width+2,height-2));} // Collision area (bottom of player)
+    public Area getColArea() {return new Area(new Rectangle2D.Double(posX,posY+height/2,width,height/2));} // Collision area (bottom)
     public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX+2,posY+1,width-4,height-2));}
 
     public void tick(Graphics2D g) {
         if (posY > Game.groundHeight-1) { // Under Ground
-            velY=0;
             posY=Game.groundHeight;
-            keyCooldown = false;
-            jumpable = true;
-            orbContact = ' ';
         } else {
             velY+=0.19*gravity;
             jumpable = false;
         }
 
+        if (onGround) { // ON GROUND
+            velY=0;
+            keyCooldown = false;
+            jumpable = true;
+            orbContact = ' ';
+        }
+
         if (keyCooldown && orbContact==' ' && !Game.jumpKey) {keyCooldown = false;}
+
         if (Game.jumpKey) {
             if (jumpable) { // Normal Jump
                 posY -= gravity*2;
                 velY = gravity*-3.8;
                 keyCooldown = true;
                 jumpable = false;
-            } else if (!(orbContact==' ') && !keyCooldown) {
+            } else if (!(orbContact==' ') && !keyCooldown) { // Orb Jump
                 posY -= gravity;
                 switch (orbContact) {
                     case '0': // YELLOW
