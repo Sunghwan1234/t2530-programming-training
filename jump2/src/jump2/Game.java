@@ -70,7 +70,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             "test: " + Game.test,
             "vel: " + player.velY,
             "y: " + player.posY,
-            "x: " + player.posX
+            "x: " + player.posX,
+            "orb: " + player.orbContact,
+            "jumpable: " + player.jumpable,
+            "gravity: " + player.gravity
         });
 
         g.dispose();
@@ -129,7 +132,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                 //blocks.b.x-=1;
                 break;
             case 38: // UP
-                //blocks.b.y-=1;
+                Game.inPlay = true;
+                blocks.scroll=0;
+                player.gravity=1;
+                player.posY = Game.groundHeight-player.height;
                 break;
             case 39: // RIGHT
                 //blocks.b.x+=1;

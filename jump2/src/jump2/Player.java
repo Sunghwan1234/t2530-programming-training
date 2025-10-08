@@ -10,32 +10,34 @@ public class Player {
     public int gravity = 1;
     //public int air = 0;
     public boolean jumpable = false;
-    public boolean orbCooldown = false;
+    public boolean keyCooldown = false;
     public char orbContact = ' '; // ' ' = none, '0' = yellow, '1' = pink, '2' = red, '3' = cyan
 
     public Player() {}
 
-    public Area getColArea() {return new Area(new Rectangle2D.Double(posX-2,posY+height,width+2,1));} // Collision area (top of player)
-    public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX,posY,width+1,height));}
+    public Area getColArea() {return new Area(new Rectangle2D.Double(posX-1,posY+1,width+2,height-2));} // Collision area (bottom of player)
+    public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX+2,posY+1,width-4,height-2));}
 
     public void tick(Graphics2D g) {
         if (posY > Game.groundHeight-1) { // Under Ground
             velY=0;
-            posY=Game.groundHeight-1;
+            posY=Game.groundHeight;
+            keyCooldown = false;
             jumpable = true;
             orbContact = ' ';
         } else {
-            velY+=0.19;
+            velY+=0.19*gravity;
             jumpable = false;
         }
 
-        if (orbCooldown && !Game.jumpKey) {orbCooldown = false;}
+        if (keyCooldown && orbContact==' ' && !Game.jumpKey) {keyCooldown = false;}
         if (Game.jumpKey) {
             if (jumpable) { // Normal Jump
                 posY -= gravity*2;
                 velY = gravity*-3.8;
-                orbCooldown = true;
-            } else if (!(orbContact==0) && !orbCooldown) {
+                keyCooldown = true;
+                jumpable = false;
+            } else if (!(orbContact==' ') && !keyCooldown) {
                 posY -= gravity;
                 switch (orbContact) {
                     case '0': // YELLOW
@@ -50,7 +52,7 @@ public class Player {
                     default:break;
                 }
                 orbContact = ' ';
-                orbCooldown = true;
+                keyCooldown = true;
             }
         }
         
@@ -62,7 +64,7 @@ public class Player {
         g.setPaint(Color.green);
         g.setStroke(new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL));
         g.draw(new Rectangle2D.Double(posX,posY,width,height));
-        //g.setPaint(Color.cyan);
-        //g.fill(getDeathArea().getBounds2D()); // Debug death area
+        g.setPaint(Color.cyan);
+        g.fill(getColArea()); // Debug death area
     }
 }

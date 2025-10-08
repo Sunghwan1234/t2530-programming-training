@@ -28,6 +28,7 @@ public class Blocks {
         double bx, by, r;
         char type, s;
         Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
+        boolean killer=false;
         public Block(double x, double y, double r, String t) {
             this.bx=x;
             this.by=y;
@@ -40,12 +41,12 @@ public class Blocks {
             Area area = new Area();
             switch (type) {
                 case 'b':
-                    area=new Area(new Rectangle2D.Double(rx(),by,width,height/3));
+                    area = new Area(new Rectangle2D.Double(rx(),by,width,height/3)); break;
                 case 'o': // Orb
                     int extra = 3;
                     area=new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2))); break;
                 case 'p': // Pad
-                    area = new Area(new Rectangle2D.Double(rx()+3,by+height-(height/4),width-6,height/4)); break;
+                    area = new Area(new Rectangle2D.Double(rx(),by+height-(height/4),width,height/4)); break;
                 default: break;
             }
             return area;
@@ -81,16 +82,14 @@ public class Blocks {
             return collide;
         }
         public void collide(Player p) {
-            if (areaCollide(getDeathArea(), p.getDeathArea())) { // Death
-                System.out.println("Death");
-                Game.inPlay = false;
-            }
             if (areaCollide(getCollisionArea(), p.getColArea())) {
                 switch (type) {
                     case 'b': // Block
                         p.velY=0;
                         p.posY=by-p.height;
                         p.jumpable = true;
+                        p.orbContact = ' ';
+                        p.keyCooldown = false;
                         break;
                     case 'o': // Orb
                         System.out.println("Orb: "+s);
@@ -111,6 +110,11 @@ public class Blocks {
                         } break;
                     default: break;
                 }
+            }
+            if (areaCollide(getDeathArea(), p.getDeathArea())) { // Death
+                System.out.println("Death");
+                Game.inPlay = false;
+                killer=true;
             }
         }
         public void render(Graphics2D g) {
@@ -148,6 +152,8 @@ public class Blocks {
                     g.fill(poly);
                     g.setStroke(stroke);
                     g.draw(poly);
+
+
                     break;
                 case 'o': // Orb
                     g.setPaint(colors[S]);
@@ -160,11 +166,19 @@ public class Blocks {
                 case 'p': // Pad
                     g.setPaint(colors[S]);
                     g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
+
+                    
                     break;
                 default: return;
             }
+            g.setPaint(Color.cyan);
+            g.fill(getCollisionArea()); // Debug collision area
             g.setPaint(Color.magenta);
-            g.fill(getDeathArea().getBounds2D()); // Debug death area
+            g.fill(getDeathArea()); // Debug death area
+            if (killer) {
+                g.setPaint(Color.red);
+                g.fill(getDeathArea());
+            }
         }
     }
     public double[] rotatePoint(double x, double y, double r, double cx, double cy) {
