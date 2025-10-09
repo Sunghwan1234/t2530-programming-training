@@ -16,8 +16,8 @@ public class Player {
 
     public Player() {}
 
-    public Area getColArea() {return new Area(new Rectangle2D.Double(posX,posY,width,height));} // Collision area (bottom)
-    public Rectangle2D getColRect() {}
+    public Area getColArea() {return new Area(getColRect());} // Collision area (bottom)
+    public Rectangle2D getColRect() {return new Rectangle2D.Double(posX,posY,width,height);} // Collision area (bottom)
     public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX+2,posY+1,width-4,height-2));}
 
     public void tick(Graphics2D g) {

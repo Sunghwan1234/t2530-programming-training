@@ -27,6 +27,7 @@ public class Blocks {
     class Block {
         double bx, by, r;
         char type, s;
+        CPoint center = new CPoint(bx+width/2,by+height/2);
         Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
         boolean killer=false;
         boolean disabled=false;
@@ -38,35 +39,35 @@ public class Blocks {
             this.s = t.charAt(1);
         }
         public double rx() {return bx-scroll;}
-        public Area getCollisionArea() {
-            Area area = new Area();
-            switch (type) {
-                case 'b':
-                    area = new Area(new Rectangle2D.Double(rx(),by,width,height/3)); break;
-                case 'o': // Orb
-                    int extra = 3;
-                    area=new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2))); break;
-                case 'p': // Pad
-                    area = new Area(new Rectangle2D.Double(rx(),by+height-(height/4),width,height/4)); break;
-                default: break;
-            }
-            return area;
+        public Area getOrbArea() {
+            int extra = 3;
+            return new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2)));
         }
-        public Area getDeathArea() {
-            Area area = new Area();
+        public Rectangle2D getColRect() {
+            switch (type) {
+                case 'b': return new Rectangle2D.Double(rx(),by,width,height);
+                case 'p': // Pad
+                    CPoint leftTop = new CPoint(rx(), by+height-(height/4));
+                    CPoint rightBottom = new CPoint(rx()+width, by+height);
+                    leftTop.rotateSelf(r, center);
+                    rightBottom.rotateSelf(r, center);
+                    return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
+                default: return new Rectangle2D.Double(rx(),by,0,0);
+            }
+        }
+        public Rectangle2D getDeathRect() {
             switch (type) {
                 case 'b':
-                    area=new Area(new Rectangle2D.Double(rx(),by+1,width,height-1)); break;
+                    return new Rectangle2D.Double(rx(),by+1,width,height-2);
                 case 's': // Spike
                     CPoint center = new CPoint(rx()+width/2,by+height/2);
                     CPoint leftTop = new CPoint(rx()-7, by-14);
                     CPoint rightBottom = new CPoint(rx()+7, by);
                     leftTop.rotateSelf(r, center);
                     rightBottom.rotateSelf(r, center);
-                    area = new Area(new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y)); break;
-            default:break;
+                    return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
+            default: return new Rectangle2D.Double(rx(),by,0,0);
             }
-            return area;
         }
         public boolean areaCollide(Area area1, Area area2) {
             boolean collide = false;
@@ -85,21 +86,28 @@ public class Blocks {
         public void collide(Player p) {
             switch (type) {
                 case 'b': // Block
-                    if (getCollisionArea().getBounds2D().intersects(p.getColArea()))
-                default: break;
-            }
-            if (areaCollide(getCollisionArea(), p.getColArea()) && (!disabled)) { // Collision
-                switch (type) {
-                    case 'b': // Block
+                    if (getDeathRect().intersects(p.getColRect())) {
+                        Game.inPlay = false;
+                        killer=true;
+                    }
+                    if (getColRect().intersects(p.getColRect())) {
                         p.onGround = true;
                         p.posY = by - p.height*p.gravity;
-                        break;
-                    case 'o': // Orb
+                    } break;
+                    
+                case 's': // Spike
+                    if (getColRect().intersects(p.getColRect())) {
+                        Game.inPlay = false;
+                        killer=true;
+                    } break;
+                case 'o': // Orb
+                    if (areaCollide(getOrbArea(), p.getColArea())) {
                         System.out.println("Orb: "+s);
                         p.orbContact = s;
                         disabled = true;
-                        break;
-                    case 'p': // Pad
+                    } break;
+                case 'p': // Pad
+                    if (getColRect().intersects(p.getColRect())) {
                         switch (s) {
                             case '0': // Yellow
                                 p.velY = -5*p.gravity; break;
@@ -112,14 +120,8 @@ public class Blocks {
                                 p.velY = p.gravity*2; break;
                             default:break;
                         }
-                        break;
-                    default: break;
-                }
-            }
-            if (areaCollide(getDeathArea(), p.getDeathArea())) { // Death
-                System.out.println("Death");
-                Game.inPlay = false;
-                killer=true;
+                    } break;
+                default: break;
             }
         }
         public void render(Graphics2D g) {
@@ -158,7 +160,7 @@ public class Blocks {
                     g.setStroke(stroke);
                     g.draw(poly);
 
-
+                    
                     break;
                 case 'o': // Orb
                     g.setPaint(colors[S]);
@@ -171,18 +173,16 @@ public class Blocks {
                 case 'p': // Pad
                     g.setPaint(colors[S]);
                     g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
-
-                    
                     break;
                 default: return;
             }
             g.setPaint(Color.cyan);
-            g.fill(getCollisionArea()); // Debug collision area
+            g.fill(getColRect()); // Debug collision area
             g.setPaint(Color.magenta);
-            g.fill(getDeathArea()); // Debug death area
+            g.fill(getDeathRect()); // Debug death area
             if (killer) {
                 g.setPaint(Color.red);
-                g.fill(getDeathArea());
+                g.fill(getDeathRect());
             }
         }
     }
