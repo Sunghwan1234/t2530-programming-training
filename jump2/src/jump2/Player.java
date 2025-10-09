@@ -37,7 +37,7 @@ public class Player {
             onGround=false;
         }
 
-        if (keyCooldown && orbContact==' ' && !Game.jumpKey) {keyCooldown = false;}
+        if (keyCooldown && !Game.jumpKey) {keyCooldown = false;}
 
         if (Game.jumpKey) {
             if (jumpable) { // Normal Jump

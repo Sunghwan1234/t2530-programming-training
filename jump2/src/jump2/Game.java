@@ -73,6 +73,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             "x: " + player.posX,
             "orb: " + player.orbContact,
             "jumpable: " + player.jumpable,
+            "KCD: " + player.keyCooldown,
             "gravity: " + player.gravity
         });
 
@@ -95,18 +96,16 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         }
         double dist(double dx, double dy) {return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));}
         double dist(CPoint p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
-        CPoint rotate(double r, CPoint c) {
-            double dx=x-c.x, dy=y-c.y; // Distance of x & y to center
-            double angle=Math.toRadians(r); // Angle in radians
-            double rx=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
-            double ry=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
+        CPoint rotate(double r, CPoint c) { // FIXED
+            double angle = Math.toRadians(r); // Angle in radians
+            double rx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
+            double ry = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
             return new CPoint(rx, ry);
         }
-        void rotateSelf(double r, CPoint c) {
-            double dx=c.x-c.x, dy=c.y-c.y; // Distance of x & y to center
-            double angle=Math.toRadians(r); // Angle in radians
-            this.x=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
-            this.y=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
+        void rotateSelf(double r, CPoint c) { // FIXED
+            double angle = Math.toRadians(r); // Angle in radians
+            this.x = c.x + (this.x-c.x)*Math.cos(-angle) - (this.y-c.y)*Math.sin(-angle); // Rotated x
+            this.y = c.y + (this.x-c.x)*Math.sin(-angle) + (this.y-c.y)*Math.cos(-angle); // Rotated y
         }
         /** Rotates an array of points by angle r from centerpoint c */
         static CPoint[] rotateArray(double r, CPoint c, CPoint[] p) {
@@ -141,7 +140,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                 //blocks.b.x+=1;
                 break;
             case 40: // DOWN
-                //blocks.b.y+=1;
+                Game.inPlay = true;
                 break;
             default: break; 
         }

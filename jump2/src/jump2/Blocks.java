@@ -47,17 +47,20 @@ public class Blocks {
             switch (type) {
                 case 'b': return new Rectangle2D.Double(rx(),by,width,height);
                 case 'p': // Pad
-                    CPoint leftTop = new CPoint(rx(), by+height-(height/4));
-                    CPoint rightBottom = new CPoint(rx()+width, by+height);
-                    leftTop.rotateSelf(r, center);
-                    rightBottom.rotateSelf(r, center);
-                    return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
+                    return new Rectangle2D.Double(rx(), by+height-(height/4),width,height/4);
+
+                    // CPoint leftTop = new CPoint(rx(), by+height-(height/4));
+                    // CPoint rightBottom = new CPoint(rx()+width, by+height);
+                    // leftTop.rotateSelf(r, center);
+                    // rightBottom.rotateSelf(r, center);
+                    // return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
                 default: return new Rectangle2D.Double(rx(),by,0,0);
             }
         }
         public Rectangle2D getDeathRect() {
             switch (type) {
                 case 'b':
+                    
                     return new Rectangle2D.Double(rx(),by+1,width,height-2);
                 case 's': // Spike
                     CPoint center = new CPoint(rx()+width/2,by+height/2);
@@ -86,7 +89,7 @@ public class Blocks {
         public void collide(Player p) {
             switch (type) {
                 case 'b': // Block
-                    if (getDeathRect().intersects(p.getColRect())) {
+                    if (getDeathRect().intersects(p.getColRect()) && (p.posY-by+height/2)<5) { // 100 - 80+10 90
                         Game.inPlay = false;
                         killer=true;
                     }
@@ -173,6 +176,9 @@ public class Blocks {
                 case 'p': // Pad
                     g.setPaint(colors[S]);
                     g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
+
+                    g.setPaint(Color.cyan);
+                    g.fill(getColRect()); // Debug collision area
                     break;
                 default: return;
             }
