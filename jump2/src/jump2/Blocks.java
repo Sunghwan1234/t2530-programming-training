@@ -83,13 +83,16 @@ public class Blocks {
             return collide;
         }
         public void collide(Player p) {
+            switch (type) {
+                case 'b': // Block
+                    if (getCollisionArea().getBounds2D().intersects(p.getColArea()))
+                default: break;
+            }
             if (areaCollide(getCollisionArea(), p.getColArea()) && (!disabled)) { // Collision
                 switch (type) {
                     case 'b': // Block
-                        if (p.posY>by) {
-                            p.onGround = true;
-                            p.posY = by - p.height*p.gravity;
-                        }
+                        p.onGround = true;
+                        p.posY = by - p.height*p.gravity;
                         break;
                     case 'o': // Orb
                         System.out.println("Orb: "+s);
