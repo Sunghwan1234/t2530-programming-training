@@ -16,12 +16,13 @@ public class Player {
 
     public Player() {}
 
-    public Area getColArea() {return new Area(new Rectangle2D.Double(posX,posY+height/2,width,height/2));} // Collision area (bottom)
+    public Area getColArea() {return new Area(new Rectangle2D.Double(posX,posY,width,height));} // Collision area (bottom)
     public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX+2,posY+1,width-4,height-2));}
 
     public void tick(Graphics2D g) {
         if (posY > Game.groundHeight-1) { // Under Ground
-            posY=Game.groundHeight;
+            posY = Game.groundHeight;
+            onGround=true;
         } else {
             velY+=0.19*gravity;
             jumpable = false;
@@ -32,6 +33,7 @@ public class Player {
             keyCooldown = false;
             jumpable = true;
             orbContact = ' ';
+            onGround=false;
         }
 
         if (keyCooldown && orbContact==' ' && !Game.jumpKey) {keyCooldown = false;}

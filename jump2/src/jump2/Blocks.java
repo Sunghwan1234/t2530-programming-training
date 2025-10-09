@@ -83,16 +83,18 @@ public class Blocks {
             return collide;
         }
         public void collide(Player p) {
-            if (areaCollide(getCollisionArea(), p.getColArea()) && !disabled) { // Collision
+            if (areaCollide(getCollisionArea(), p.getColArea()) && (!disabled)) { // Collision
                 switch (type) {
                     case 'b': // Block
-                        p.onGround = true;
-                        p.posY=by-p.height;
-                        
+                        if (p.posY>by) {
+                            p.onGround = true;
+                            p.posY = by - p.height*p.gravity;
+                        }
                         break;
                     case 'o': // Orb
                         System.out.println("Orb: "+s);
                         p.orbContact = s;
+                        disabled = true;
                         break;
                     case 'p': // Pad
                         switch (s) {
@@ -107,7 +109,6 @@ public class Blocks {
                                 p.velY = p.gravity*2; break;
                             default:break;
                         }
-                        disabled = true;
                         break;
                     default: break;
                 }
