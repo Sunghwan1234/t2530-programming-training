@@ -3,7 +3,7 @@ package jump2;
 import java.awt.*;
 import java.util.List;
 
-import jump2.Game.CPoint;
+import jump2.Game.CP;
 
 import java.awt.geom.*;
 import java.io.FileNotFoundException;
@@ -27,7 +27,6 @@ public class Blocks {
     class Block {
         double bx, by, r;
         char type, s;
-        CPoint center = new CPoint(bx+width/2,by+height/2);
         Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
         boolean killer=false;
         boolean disabled=false;
@@ -39,6 +38,7 @@ public class Blocks {
             this.s = t.charAt(1);
         }
         public double rx() {return bx-scroll;}
+        public CP center() {return new CP(rx()+width/2,by+height/2);}
         public Area getOrbArea() {
             int extra = 3;
             return new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2)));
@@ -60,12 +60,11 @@ public class Blocks {
         public Rectangle2D getDeathRect() {
             switch (type) {
                 case 'b':
-                    
                     return new Rectangle2D.Double(rx(),by+1,width,height-2);
                 case 's': // Spike
-                    CPoint center = new CPoint(rx()+width/2,by+height/2);
-                    CPoint leftTop = new CPoint(rx()-7, by-14);
-                    CPoint rightBottom = new CPoint(rx()+7, by);
+                    CP center = center();
+                    CP leftTop = new CP(rx()+3, by+6);
+                    CP rightBottom = new CP(rx()+width-3, by);
                     leftTop.rotateSelf(r, center);
                     rightBottom.rotateSelf(r, center);
                     return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
@@ -89,17 +88,18 @@ public class Blocks {
         public void collide(Player p) {
             switch (type) {
                 case 'b': // Block
-                    if (getDeathRect().intersects(p.getColRect()) && (p.posY-by+height/2)<5) { // 100 - 80+10 90
+                    if (getDeathRect().intersects(p.getDeathRect()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
                         Game.inPlay = false;
                         killer=true;
+                        System.out.println("Death by block with dist: "+(p.posY - by));
                     }
-                    if (getColRect().intersects(p.getColRect())) {
+                    if (getColRect().intersects(p.getColRect()) && Math.abs(p.posY - by) >= 10 ) {
                         p.onGround = true;
                         p.posY = by - p.height*p.gravity;
                     } break;
                     
                 case 's': // Spike
-                    if (getColRect().intersects(p.getColRect())) {
+                    if (getColRect().intersects(p.getDeathRect())) {
                         Game.inPlay = false;
                         killer=true;
                     } break;
@@ -120,9 +120,10 @@ public class Blocks {
                                 p.velY = -6.7*p.gravity; break;
                             case '3':
                                 p.gravity *= -1;
-                                p.velY = p.gravity*2; break;
+                                p.velY = p.gravity*4; break;
                             default:break;
                         }
+                        disabled = true;
                     } break;
                 default: break;
             }
@@ -131,15 +132,15 @@ public class Blocks {
             double x=rx(), y=by;
             int S = Character.getNumericValue(s);
             float fx=(float)x, fy=(float)y; int ix=(int)x, iy=(int)y;
-            CPoint center = new CPoint(x+width/2,y+height/2);
+            CP center = new CP(x+width/2,y+height/2);
             Stroke stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
             switch (type) {
                 case 'b': // Block
-                    CPoint[] gradient = new CPoint[] {
-                        new CPoint(fx+width/2,fy), // Top middle
-                        new CPoint(fx+width/2,fy+height) // Bottom middle
+                    CP[] gradient = new CP[] {
+                        new CP(fx+width/2,fy), // Top middle
+                        new CP(fx+width/2,fy+height) // Bottom middle
                     };
-                    gradient = CPoint.rotateArray(r, center, gradient);
+                    gradient = CP.rotateArray(r, center, gradient);
                     g.setPaint(new GradientPaint(
                         (float) gradient[0].x, (float) gradient[0].y, Color.white, // at Top middle
                         (float) gradient[1].x, (float) gradient[1].y, Color.black // at Bottom middle
@@ -150,12 +151,12 @@ public class Blocks {
                     g.draw(new Rectangle2D.Double(x,y,width,height));
                     break;
                 case 's': // Spike
-                    CPoint[] points = new CPoint[] {
-                        new CPoint(x,y+height), // Left Bottom
-                        new CPoint(x+width/2,y), // Middle Top
-                        new CPoint(x+width,y+height) // Right Bottom
+                    CP[] points = new CP[] {
+                        new CP(x,y+height), // Left Bottom
+                        new CP(x+width/2,y), // Middle Top
+                        new CP(x+width,y+height) // Right Bottom
                     };
-                    points = CPoint.rotateArray(r, center, points);
+                    points = CP.rotateArray(r, center, points);
                     Polygon poly = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1],3);
 
                     g.setPaint(new GradientPaint(fx+width/2,fy,Color.red,fx+width/2,fy+height,Color.white));
@@ -199,7 +200,7 @@ public class Blocks {
         double ry=cy+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
         return new double[] {rx,ry};
     }
-    public int[][] returnIntArray(CPoint[] points) {
+    public int[][] returnIntArray(CP[] points) {
         int[][] intpoints = new int[2][points.length];
         for (int i=0;i<points.length;i++) {
             intpoints[0][i] = (int) points[i].x;
@@ -241,7 +242,7 @@ public class Blocks {
     public void tick(Graphics2D g, Player player) {
         for (int i=0;i<blockCount;i++) {
             block[i].render(g);
-            block[i].collide(player);
+            if (!block[i].disabled) {block[i].collide(player);}
         }
     }
 }

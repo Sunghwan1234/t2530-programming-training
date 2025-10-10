@@ -88,35 +88,35 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {repaint();}
     /** CustomPoint for rotation */
-    public static class CPoint {
+    public static class CP {
         double x, y;
-        public CPoint(double x, double y) {
+        public CP(double x, double y) {
             this.x = x;
             this.y = y;
         }
         double dist(double dx, double dy) {return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));}
-        double dist(CPoint p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
-        CPoint rotate(double r, CPoint c) { // FIXED
+        double dist(CP p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
+        CP rotate(double r, CP c) { // FIXED
             double angle = Math.toRadians(r); // Angle in radians
             double rx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
             double ry = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
-            return new CPoint(rx, ry);
+            return new CP(rx, ry);
         }
-        void rotateSelf(double r, CPoint c) { // FIXED
+        void rotateSelf(double r, CP c) { // FIXED
             double angle = Math.toRadians(r); // Angle in radians
             this.x = c.x + (this.x-c.x)*Math.cos(-angle) - (this.y-c.y)*Math.sin(-angle); // Rotated x
             this.y = c.y + (this.x-c.x)*Math.sin(-angle) + (this.y-c.y)*Math.cos(-angle); // Rotated y
         }
         /** Rotates an array of points by angle r from centerpoint c */
-        static CPoint[] rotateArray(double r, CPoint c, CPoint[] p) {
-            CPoint[] rp = new CPoint[p.length];
+        static CP[] rotateArray(double r, CP c, CP[] p) {
+            CP[] rp = new CP[p.length];
             for (int i=0;i<p.length;i++) {rp[i] = p[i].rotate(r, c);}
             return rp;
         }
-        CPoint translate(double dx, double dy) {return new CPoint(x+dx, y+dy);}
-        CPoint scale(double s, CPoint c) {return new CPoint(c.x+(x-c.x)*s, c.y+(y-c.y)*s);}
-        CPoint scale(double sx, double sy, Point c) {return new CPoint(c.x+(x-c.x)*sx, c.y+(y-c.y)*sy);}
-        CPoint midpoint(CPoint p) {return new CPoint((x+p.x)/2, (y+p.y)/2);}
+        CP translate(double dx, double dy) {return new CP(x+dx, y+dy);}
+        CP scale(double s, CP c) {return new CP(c.x+(x-c.x)*s, c.y+(y-c.y)*s);}
+        CP scale(double sx, double sy, Point c) {return new CP(c.x+(x-c.x)*sx, c.y+(y-c.y)*sy);}
+        CP midpoint(CP p) {return new CP((x+p.x)/2, (y+p.y)/2);}
         @Override
         public String toString() {return "("+x+", "+y+")";}
     }
