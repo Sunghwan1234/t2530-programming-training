@@ -86,7 +86,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     }
 
     public void reset() {
-        inPlay = false;
+        inPlay = true;
         blocks.scroll=0;
         player.gravity=1;
         player.posY = Game.groundHeight-player.height;
@@ -94,7 +94,9 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         player.orbContact=' ';
         player.jumpable=false;
         player.keyCooldown=false;
-        
+        for (int i = 0;i<blocks.blockCount;i++) {
+            blocks.block[i].disabled = false;
+        }
     }
 
     @Override
@@ -125,6 +127,15 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             for (int i=0;i<p.length;i++) {rp[i] = p[i].rotate(r, c);}
             return rp;
         }
+        /** [0] is X, [1] is Y. */
+        static int[][] returnIntArray(CP[] points) {
+        int[][] intpoints = new int[2][points.length];
+        for (int i=0;i<points.length;i++) {
+            intpoints[0][i] = (int) points[i].x;
+            intpoints[1][i] = (int) points[i].y;
+        }
+        return intpoints;
+    }
         CP translate(double dx, double dy) {return new CP(x+dx, y+dy);}
         CP scale(double s, CP c) {return new CP(c.x+(x-c.x)*s, c.y+(y-c.y)*s);}
         CP scale(double sx, double sy, Point c) {return new CP(c.x+(x-c.x)*sx, c.y+(y-c.y)*sy);}
@@ -143,10 +154,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                 //blocks.b.x-=1;
                 break;
             case 38: // UP
-                Game.inPlay = true;
-                blocks.scroll=0;
-                player.gravity=1;
-                player.posY = Game.groundHeight-player.height;
+                reset();
                 break;
             case 39: // RIGHT
                 //blocks.b.x+=1;

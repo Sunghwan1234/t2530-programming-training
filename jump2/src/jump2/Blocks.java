@@ -36,24 +36,34 @@ public class Blocks {
             this.r=r;
             this.type = t.charAt(0);
             this.s = t.charAt(1);
+            System.out.println("Block created: "+x+";"+y+";"+r+";"+type+"."+s);
         }
         public double rx() {return bx-scroll;}
         public CP center() {return new CP(rx()+width/2,by+height/2);}
         public Area getOrbArea() {
-            int extra = 3;
+            int extra = 0;
             return new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2)));
         }
-        public Rectangle2D getColRect() {
+        public Rectangle2D getColRect(Graphics2D g) {
             switch (type) {
                 case 'b': return new Rectangle2D.Double(rx(),by,width,height);
                 case 'p': // Pad
-                    return new Rectangle2D.Double(rx(), by+height-(height/4),width,height/4);
+                    
 
-                    // CPoint leftTop = new CPoint(rx(), by+height-(height/4));
-                    // CPoint rightBottom = new CPoint(rx()+width, by+height);
-                    // leftTop.rotateSelf(r, center);
-                    // rightBottom.rotateSelf(r, center);
-                    // return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
+
+
+                    //return new Rectangle2D.Double(rx(), by+height-(height/4),width,height/4);
+
+                    CP[] points = new CP[] {
+                        new CP(rx(),       by+height-(height/4)), // LEFT TOP
+                        new CP(rx()+width, by+height-(height/4)), // RIGHT TOP
+                        new CP(rx()+width, by+height), // RIGHT BOTTOM
+                        new CP(rx(),       by+height) // LEFT BOTTOM
+                    };
+                    //points = CP.rotateArray(r, center(), points);
+                    int[][] intArray = CP.returnIntArray(points);
+                    Polygon poly = new Polygon(intArray[0], intArray[1], 4);
+                    return poly.getBounds2D();
                 default: return new Rectangle2D.Double(rx(),by,0,0);
             }
         }
@@ -85,7 +95,7 @@ public class Blocks {
             }
             return collide;
         }
-        public void collide(Player p) {
+        public void collide(Player p, Graphics2D g) {
             switch (type) {
                 case 'b': // Block
                     if (getDeathRect().intersects(p.getDeathRect()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
@@ -93,13 +103,13 @@ public class Blocks {
                         killer=true;
                         System.out.println("Death by block with dist: "+(p.posY - by));
                     }
-                    if (getColRect().intersects(p.getColRect()) && Math.abs(p.posY - by) >= 10 ) {
+                    if (getColRect(g).intersects(p.getColRect()) && Math.abs(p.posY - by) >= 10 ) {
                         p.onGround = true;
                         p.posY = by - p.height*p.gravity;
                     } break;
                     
                 case 's': // Spike
-                    if (getColRect().intersects(p.getDeathRect())) {
+                    if (getColRect(g).intersects(p.getDeathRect())) {
                         Game.inPlay = false;
                         killer=true;
                     } break;
@@ -110,7 +120,7 @@ public class Blocks {
                         disabled = true;
                     } break;
                 case 'p': // Pad
-                    if (getColRect().intersects(p.getColRect())) {
+                    if (getColRect(g).intersects(p.getColRect())) {
                         switch (s) {
                             case '0': // Yellow
                                 p.velY = -5*p.gravity; break;
@@ -157,7 +167,8 @@ public class Blocks {
                         new CP(x+width,y+height) // Right Bottom
                     };
                     points = CP.rotateArray(r, center, points);
-                    Polygon poly = new Polygon(returnIntArray(points)[0],returnIntArray(points)[1],3);
+                    int[][] intArray = CP.returnIntArray(points);
+                    Polygon poly = new Polygon(intArray[0],intArray[1],3);
 
                     g.setPaint(new GradientPaint(fx+width/2,fy,Color.red,fx+width/2,fy+height,Color.white));
                     g.fill(poly);
@@ -179,12 +190,12 @@ public class Blocks {
                     g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
 
                     g.setPaint(Color.cyan);
-                    g.fill(getColRect()); // Debug collision area
+                    g.fill(getColRect(g)); // Debug collision area
                     break;
                 default: return;
             }
             g.setPaint(Color.cyan);
-            g.fill(getColRect()); // Debug collision area
+            g.fill(getColRect(g)); // Debug collision area
             g.setPaint(Color.magenta);
             g.fill(getDeathRect()); // Debug death area
             if (killer) {
@@ -199,14 +210,6 @@ public class Blocks {
         double rx=cx+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
         double ry=cy+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
         return new double[] {rx,ry};
-    }
-    public int[][] returnIntArray(CP[] points) {
-        int[][] intpoints = new int[2][points.length];
-        for (int i=0;i<points.length;i++) {
-            intpoints[0][i] = (int) points[i].x;
-            intpoints[1][i] = (int) points[i].y;
-        }
-        return intpoints;
     }
     /**Imports level data from a .txt file.
      * Order:
@@ -242,7 +245,7 @@ public class Blocks {
     public void tick(Graphics2D g, Player player) {
         for (int i=0;i<blockCount;i++) {
             block[i].render(g);
-            if (!block[i].disabled) {block[i].collide(player);}
+            if (!block[i].disabled) {block[i].collide(player, g);}
         }
     }
 }
