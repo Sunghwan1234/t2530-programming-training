@@ -63,7 +63,7 @@ public class Blocks {
                     return new Rectangle2D.Double(rx(),by+1,width,height-2);
                 case 's': // Spike
                     CP center = center();
-                    CP leftTop = new CP(rx()+3, by+6);
+                    CP leftTop = new CP(rx()+3, by+12);
                     CP rightBottom = new CP(rx()+width-3, by);
                     leftTop.rotateSelf(r, center);
                     rightBottom.rotateSelf(r, center);

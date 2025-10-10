@@ -85,6 +85,18 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         for (int i=0;i<s.length;i++) {g.drawString(s[i],12,16+i*10);}
     }
 
+    public void reset() {
+        inPlay = false;
+        blocks.scroll=0;
+        player.gravity=1;
+        player.posY = Game.groundHeight-player.height;
+        player.velY=0;
+        player.orbContact=' ';
+        player.jumpable=false;
+        player.keyCooldown=false;
+        
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {repaint();}
     /** CustomPoint for rotation */
