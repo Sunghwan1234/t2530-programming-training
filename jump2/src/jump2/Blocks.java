@@ -244,8 +244,13 @@ public class Blocks {
 
     public void tick(Graphics2D g, Player player) {
         for (int i=0;i<blockCount;i++) {
-            block[i].render(g);
-            if (!block[i].disabled) {block[i].collide(player, g);}
+            if (block[i].rx()<1200 && block[i].rx()>0) {
+                block[i].render(g);
+            }
+            if (block[i].rx()<player.posX+40 && block[i].rx()>player.posX-20) {
+                if (!block[i].disabled) {block[i].collide(player, g);}
+            }
+            
         }
     }
 }

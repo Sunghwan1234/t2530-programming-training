@@ -52,6 +52,9 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     @Override
     public void paint(Graphics g) { // Render and execute all your entities here 
         Graphics2D g2 = (Graphics2D) g;
+        if (inPlay) {
+            blocks.scroll+=1;
+        }
         // Draw background
         g.setColor(Color.black);
         g.fillRect(0, 0, WIN_WIDTH, windowHeight);
@@ -62,9 +65,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         blocks.tick(g2, player);
         player.tick(g2);
 
-        if (inPlay) {
-            blocks.scroll+=2;
-        }
+        
 
         stringWriter(g, new String[] {
             "test: " + Game.test,
