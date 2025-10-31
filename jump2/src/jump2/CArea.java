@@ -1,14 +1,20 @@
 package jump2;
 
+import java.awt.geom.*;
+
 public class CArea {
-  CP p1, p2;
+  private CP p1, p2;
   /** Left Top, Right Bottom */
-  CP lt, rb;
-  double l, t, r, b;
+  public CP lt, rb;
+  public double l, t, r, b;
 
   public CArea() {}
   public CArea(CP p1, CP p2) {
     this.p1 = p1; this.p2 = p2;
+    this.setCorners();
+  }
+  public CArea(double x1, double y1, double x2, double y2) {
+    this.p1 = new CP(x1, y1); this.p2 = new CP(x2, y2);
     this.setCorners();
   }
   /** */
@@ -32,6 +38,10 @@ public class CArea {
       a1.t<a2.b &&
       a1.b>a2.t
     );
+  }
+  public Rectangle2D getRect() {
+    this.setCorners();
+    return new Rectangle2D.double(l,t,l-r,t-b);
   }
 
 }

@@ -14,8 +14,8 @@ import java.io.FileNotFoundException;
 
 public class Game extends JPanel implements ActionListener, KeyListener { 
     // CONSTANTS
-    public static final int WIN_WIDTH = 1200, windowHeight = 600;
-    public static final int width = WIN_WIDTH, height = windowHeight-37;
+    public static final int WIN_WIDTH = 1200, WIN_HEIGHT = 600;
+    public static final int width = WIN_WIDTH, height = WIN_HEIGHT-37;
     public static int groundHeight = 430;
 
     public static final String[] BLOCK_TYPES = {"b","s","o","p"};
@@ -57,7 +57,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         }
         // Draw background
         g.setColor(Color.black);
-        g.fillRect(0, 0, WIN_WIDTH, windowHeight);
+        g.fillRect(0, 0, WIN_WIDTH, WIN_HEIGHT);
         g.setColor(Color.white);
         g.fillRect(0,groundHeight+20,width,20);
 

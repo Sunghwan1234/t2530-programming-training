@@ -31,7 +31,7 @@ public class Block {
   }
   public Rectangle2D getColRect(Graphics2D g) {
       switch (type) {
-          case 'b': return new Rectangle2D.Double(rx(),by,width,height);
+          case 'b': return new CArea(rx(),by,width,height);
           case 'p': // Pad
               
 
