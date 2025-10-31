@@ -3,14 +3,19 @@ package jump2;
 import java.awt.geom.*;
 
 public class CArea {
-  private CP p1, p2;
+  private CP p1, p2; // Original Points of the Area
   /** Left Top, Right Bottom */
-  public CP lt, rb;
-  public double l, t, r, b;
+  public CP lt, rb; // Left Top and Right Bottom points
+  public double l, t, r, b, w,h;
 
   public CArea() {}
   public CArea(CP p1, CP p2) {
     this.p1 = p1; this.p2 = p2;
+    this.setCorners();
+  }
+  public CArea(CP[] pointList) {
+    this.p1 = pointList[0];
+    this.p2 = pointList[1];
     this.setCorners();
   }
   public CArea(double x1, double y1, double x2, double y2) {
@@ -18,16 +23,23 @@ public class CArea {
     this.setCorners();
   }
   /** */
-  public void setCorners() {
+  public void setCorners() { // Sets the corner Points using p1 p2
     this.lt.x = p1.x<p2.x ? p1.x : p2.x;
     this.lt.y = p1.y<p2.y ? p1.y : p2.y;
     this.rb.x = p1.x>p2.x ? p1.x : p2.x;
     this.rb.y = p1.y>p2.y ? p1.y : p2.y;
-    setVars();
+    this.setVars();
   }
-  public void setVars() {
+  private void setVars() {
     l = lt.x; t = lt.y;
     r = rb.x; b = rb.y;
+    w = r-l; h = b-t;
+  }
+
+  public void rotate(double r, CP c) {
+    p1.rotateSelf(r,c);
+    p2.rotateSelf(r,c);
+    this.setCorners;
   }
   
   public static boolean col(CArea a1, CArea a2) {
@@ -41,7 +53,7 @@ public class CArea {
   }
   public Rectangle2D getRect() {
     this.setCorners();
-    return new Rectangle2D.double(l,t,l-r,t-b);
+    return new Rectangle2D.Double(l,t,w,h);
   }
 
 }

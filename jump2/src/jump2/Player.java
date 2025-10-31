@@ -16,6 +16,7 @@ public class Player {
 
     public Player() {}
 
+    public CArea getColCA() {return new CArea(posX,posY,posX+width,posY+height)}
     public Area getColArea() {return new Area(getColRect());} // Collision area (bottom)
     public Rectangle2D getColRect() {return new Rectangle2D.Double(posX,posY,width,height);} // Collision area (bottom)
     public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX+2,posY+1,width-4,height-2));}

@@ -29,15 +29,17 @@ public class Block {
       int extra = 0;
       return new Area(new Ellipse2D.Double(rx()-extra,by-extra,width+(extra*2),height+(extra*2)));
   }
-  public Rectangle2D getColRect(Graphics2D g) {
+  public CArea getColCA() {
       switch (type) {
-          case 'b': return new CArea(rx(),by,width,height);
+          case 'b': return new CArea(rx(),by,rx()+width,by+height);
           case 'p': // Pad
-              
-
-
-
               //return new Rectangle2D.Double(rx(), by+height-(height/4),width,height/4);
+
+              CArea area = new CArea(
+                rx(),       by+height-(height/4)
+                rx()+width, by+height
+              )
+              area.rotate(r, center());
 
               CP[] points = new CP[] {
                   new CP(rx(),       by+height-(height/4)), // LEFT TOP
@@ -46,10 +48,11 @@ public class Block {
                   new CP(rx(),       by+height) // LEFT BOTTOM
               };
               //points = CP.rotateArray(r, center(), points);
-              int[][] intArray = CP.returnIntArray(points);
-              Polygon poly = new Polygon(intArray[0], intArray[1], 4);
-              return poly.getBounds2D();
-          default: return new Rectangle2D.Double(rx(),by,0,0);
+              //int[][] intArray = CP.returnIntArray(points);
+              //Polygon poly = new Polygon(intArray[0], intArray[1], 4);
+              //return poly.getBounds2D();
+              return area;
+          default: return new CArea(rx(),by,rx()+width,by+height);
       }
   }
   public Rectangle2D getDeathRect() {
@@ -57,12 +60,19 @@ public class Block {
           case 'b':
               return new Rectangle2D.Double(rx(),by+1,width,height-2);
           case 's': // Spike
-              CP center = center();
-              CP leftTop = new CP(rx()+3, by+12);
-              CP rightBottom = new CP(rx()+width-3, by);
-              leftTop.rotateSelf(r, center);
-              rightBottom.rotateSelf(r, center);
-              return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
+                CArea area = new CArea(
+                    rx()+3, by+12
+                    rx()+width-3, by
+                )
+                area.rotate(r,center());
+                return area.getRect();
+
+              //CP center = center();
+              //CP leftTop = new CP(rx()+3, by+12);
+              //CP rightBottom = new CP(rx()+width-3, by);
+              //leftTop.rotateSelf(r, center);
+              //rightBottom.rotateSelf(r, center);
+              //return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
       default: return new Rectangle2D.Double(rx(),by,0,0);
       }
   }
@@ -83,7 +93,7 @@ public class Block {
   public void collide(Player p, Graphics2D g) {
       switch (type) {
           case 'b': // Block
-              if (getDeathRect().intersects(p.getDeathRect()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
+              if (CArea.col(getColCA(),p.getColCA())) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
                   Game.inPlay = false;
                   killer=true;
                   System.out.println("Death by block with dist: "+(p.posY - by));

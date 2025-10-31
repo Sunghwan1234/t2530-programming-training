@@ -8,19 +8,19 @@ public class CP {
   }
   double dist(double dx, double dy) {return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));}
   double dist(CP p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
-  CP rotate(double r, CP c) { // FIXED
+  public CP rotate(double r, CP c) { // FIXED
       double angle = Math.toRadians(r); // Angle in radians
       double rx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
       double ry = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
       return new CP(rx, ry);
   }
-  void rotateSelf(double r, CP c) { // FIXED
+  public void rotateSelf(double r, CP c) { // FIXED
       double angle = Math.toRadians(r); // Angle in radians
       this.x = c.x + (this.x-c.x)*Math.cos(-angle) - (this.y-c.y)*Math.sin(-angle); // Rotated x
       this.y = c.y + (this.x-c.x)*Math.sin(-angle) + (this.y-c.y)*Math.cos(-angle); // Rotated y
   }
   /** Rotates an array of points by angle r from centerpoint c */
-  static CP[] rotateArray(double r, CP c, CP[] p) {
+  public static CP[] rotateArray(double r, CP c, CP[] p) {
       CP[] rp = new CP[p.length];
       for (int i=0;i<p.length;i++) {rp[i] = p[i].rotate(r, c);}
       return rp;
