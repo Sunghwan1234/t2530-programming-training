@@ -39,7 +39,7 @@ public class CArea {
   public void rotate(double r, CP c) {
     p1.rotateSelf(r,c);
     p2.rotateSelf(r,c);
-    this.setCorners;
+    this.setCorners();
   }
   
   public static boolean col(CArea a1, CArea a2) {

@@ -36,9 +36,9 @@ public class Block {
               //return new Rectangle2D.Double(rx(), by+height-(height/4),width,height/4);
 
               CArea area = new CArea(
-                rx(),       by+height-(height/4)
+                rx(),       by+height-(height/4),
                 rx()+width, by+height
-              )
+              );
               area.rotate(r, center());
 
               CP[] points = new CP[] {
@@ -55,17 +55,17 @@ public class Block {
           default: return new CArea(rx(),by,rx()+width,by+height);
       }
   }
-  public Rectangle2D getDeathRect() {
+  public CArea getDeathCA() {
       switch (type) {
           case 'b':
-              return new Rectangle2D.Double(rx(),by+1,width,height-2);
+              return new CArea(rx(),by+1,rx()+width,by+1+height-2);
           case 's': // Spike
                 CArea area = new CArea(
-                    rx()+3, by+12
+                    rx()+3, by+12,
                     rx()+width-3, by
-                )
+                );
                 area.rotate(r,center());
-                return area.getRect();
+                return area;
 
               //CP center = center();
               //CP leftTop = new CP(rx()+3, by+12);
@@ -73,7 +73,7 @@ public class Block {
               //leftTop.rotateSelf(r, center);
               //rightBottom.rotateSelf(r, center);
               //return new Rectangle2D.Double(leftTop.x,leftTop.y,rightBottom.x-leftTop.x,rightBottom.y-leftTop.y);
-      default: return new Rectangle2D.Double(rx(),by,0,0);
+      default: return new CArea();
       }
   }
   public boolean areaCollide(Area area1, Area area2) {
@@ -93,18 +93,18 @@ public class Block {
   public void collide(Player p, Graphics2D g) {
       switch (type) {
           case 'b': // Block
-              if (CArea.col(getColCA(),p.getColCA())) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
+              if (CArea.col(getColCA(),p.getColCA()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
                   Game.inPlay = false;
                   killer=true;
                   System.out.println("Death by block with dist: "+(p.posY - by));
               }
-              if (getColRect(g).intersects(p.getColRect()) && Math.abs(p.posY - by) >= 10 ) {
+              if (CArea.col(getColCA(),p.getColCA()) && Math.abs(p.posY - by) >= 10 ) {
                   p.onGround = true;
                   p.posY = by - p.height*p.gravity;
               } break;
               
           case 's': // Spike
-              if (getColRect(g).intersects(p.getDeathRect())) {
+              if (CArea.col(getDeathCA(),p.getDeathCA())) {
                   Game.inPlay = false;
                   killer=true;
               } break;
@@ -115,7 +115,7 @@ public class Block {
                   disabled = true;
               } break;
           case 'p': // Pad
-              if (getColRect(g).intersects(p.getColRect())) {
+              if (CArea.col(getColCA(),p.getColCA())) {
                   switch (s) {
                       case '0': // Yellow
                           p.velY = -5*p.gravity; break;
@@ -185,17 +185,17 @@ public class Block {
               g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
 
               g.setPaint(Color.cyan);
-              g.fill(getColRect(g)); // Debug collision area
+              g.fill(getColCA().getRect()); // Debug collision area
               break;
           default: return;
       }
       g.setPaint(Color.cyan);
-      g.fill(getColRect(g)); // Debug collision area
+      g.fill(getColCA().getRect()); // Debug collision area
       g.setPaint(Color.magenta);
-      g.fill(getDeathRect()); // Debug death area
+      g.fill(getDeathCA().getRect()); // Debug death area
       if (killer) {
           g.setPaint(Color.red);
-          g.fill(getDeathRect());
+          g.fill(getDeathCA().getRect());
       }
   }
 }
