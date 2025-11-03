@@ -3,14 +3,15 @@ package jump2;
 import java.awt.geom.*;
 
 public class CArea {
-  private CP p1, p2; // Original Points of the Area
+  private CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
   /** Left Top, Right Bottom */
-  public CP lt, rb; // Left Top and Right Bottom points
-  public double l, t, r, b, w,h;
+  public CP lt = new CP(0,0), rb = new CP(0,0); // Left Top and Right Bottom points
+  private double l, t, r, b, w,h;
 
   public CArea() {}
   public CArea(CP p1, CP p2) {
-    this.p1 = p1; this.p2 = p2;
+    this.p1 = p1;
+    this.p2 = p2;
     this.setCorners();
   }
   public CArea(CP[] pointList) {
@@ -19,7 +20,8 @@ public class CArea {
     this.setCorners();
   }
   public CArea(double x1, double y1, double x2, double y2) {
-    this.p1 = new CP(x1, y1); this.p2 = new CP(x2, y2);
+    this.p1 = new CP(x1, y1);
+    this.p2 = new CP(x2, y2);
     this.setCorners();
   }
   /** */
@@ -41,7 +43,12 @@ public class CArea {
     p2.rotateSelf(r,c);
     this.setCorners();
   }
-  
+  /** Sets p1p2 to ltrb. */
+  public void cornerPoints() {
+    setCorners();
+    this.p1 = this.lt;
+    this.p2 = this.rb;
+  }
   public static boolean col(CArea a1, CArea a2) {
     a1.setCorners(); a2.setCorners();
     return (

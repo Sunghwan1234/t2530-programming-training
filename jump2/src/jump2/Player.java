@@ -23,6 +23,7 @@ public class Player {
     public Area getDeathArea() {return new Area(new Rectangle2D.Double(posX+2,posY+1,width-4,height-2));}
     //public Rectangle2D getDeathRect() {return new Rectangle2D.Double(posX+2,posY+1,width-4,height-2);}
 
+    // TODO: orb velocity comes first
     public void tick(Graphics2D g) {
         if (!Game.inPlay) {paint(g); return;}
         if (posY > Game.groundHeight-1) { // Under Ground
