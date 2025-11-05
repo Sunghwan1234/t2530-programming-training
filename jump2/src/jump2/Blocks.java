@@ -40,6 +40,7 @@ public class Blocks {
         Scanner sc = new Scanner(file); // I use Scanner.
         List<String> lines = new ArrayList<>();
         while (sc.hasNextLine()) {lines.add(sc.nextLine());}
+        sc.close();
         String[] arr = lines.toArray(String[]::new); // The scanner output goes to String array arr[x][v]
         //System.out.println(Arrays.deepToString(arr));
         String[] blockdata;
