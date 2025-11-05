@@ -24,8 +24,8 @@ public class CArea {
     this.p2 = new CP(x2, y2);
     this.setCorners();
   }
-  /** */
-  public void setCorners() { // Sets the corner Points using p1 p2
+  /** Sets the corner Points using p1 p2 */
+  public void setCorners() {
     this.lt.x = p1.x<p2.x ? p1.x : p2.x;
     this.lt.y = p1.y<p2.y ? p1.y : p2.y;
     this.rb.x = p1.x>p2.x ? p1.x : p2.x;

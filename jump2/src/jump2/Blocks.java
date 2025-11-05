@@ -3,9 +3,7 @@ package jump2;
 import java.awt.*;
 import java.util.List;
 
-import java.awt.geom.*;
 import java.io.FileNotFoundException;
-// do not use arraylist, it is garbage
 import java.util.*;
 
 import java.io.File;
@@ -20,9 +18,9 @@ public class Blocks {
 
     public static int scroll = 0;
     /**
-     * Block Class: x, y, r, type
+     * Block Container Class.
      */
-    
+    public Blocks() {}
     public double[] rotatePoint(double x, double y, double r, double cx, double cy) {
         double dx=(cx+width/2)-cx, dy=(cy+height/2)-cy; // Distance of x & y to center
         double angle=Math.toRadians(r); // Angle in radians
@@ -36,7 +34,7 @@ public class Blocks {
      * blockdata = [x,y,rotation,type]
      */
     public void importLV(File file) throws FileNotFoundException {
-        blockCount=0;
+        blockCount = 0;
         Scanner sc = new Scanner(file); // I use Scanner.
         List<String> lines = new ArrayList<>();
         while (sc.hasNextLine()) {lines.add(sc.nextLine());}

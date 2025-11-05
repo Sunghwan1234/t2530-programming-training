@@ -88,7 +88,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
 
     public void reset() {
         inPlay = true;
-        blocks.scroll=0;
+        Blocks.scroll=0;
         player.gravity=1;
         player.posY = Game.groundHeight-player.height;
         player.velY=0;

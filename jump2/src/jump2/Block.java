@@ -1,10 +1,7 @@
 package jump2;
 
 import java.awt.*;
-import java.util.*;
 import java.awt.geom.*;
-
-import jump2.Blocks;
 
 public class Block {
     int width = Blocks.width;
@@ -84,7 +81,7 @@ public class Block {
     /** Handles all collision with the player. */
     public void collide(Player p, Graphics2D g) {
         switch (type) {
-            case 'b': // Block
+            case 'b': // Block TODO: gravity
                 if (CArea.col(getColCA(), p.getColCA()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
                     Game.inPlay = false;
                     killer=true;
