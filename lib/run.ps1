@@ -1,0 +1,1 @@
+  c:; cd 'c:\Users\1002222\Documents\prog\t2530-programming-training'; & 'C:\Program Files\Java\jdk-21\bin\java.exe' '-XX:+ShowCodeDetailsInExceptionMessages' '-cp' 'C:\Users\1002222\AppData\Roaming\Code\User\workspaceStorage\bd9e22cc4e7ce5438498fae8d6036416\redhat.java\jdt_ws\t2530-programming-training_bed6b8c8\bin' 'lib.JumpLibTester'
