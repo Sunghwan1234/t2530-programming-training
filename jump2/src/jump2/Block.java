@@ -36,8 +36,8 @@ public class Block {
             case 'p': // Pad
                 //return new Rectangle2D.Double(rx(), by+height-(height/4),width,height/4);
                 CArea area = new CArea(
-                    rx(),       by+height-(height/5),   // Left Top
-                    rx()+width, by+height               // Right Bottom
+                    rx()+2,       by+height-(height/5),   // Left Top
+                    rx()+width-2, by+height               // Right Bottom
                 );
                 area.rotate(r, center());
                 return area;
@@ -81,8 +81,8 @@ public class Block {
     /** Handles all collision with the player. */
     public void collide(Player p, Graphics2D g) {
         switch (type) {
-            case 'b': // Block TODO: gravity
-                if (CArea.col(getColCA(), p.getColCA()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
+            case 'b':
+                if (CArea.col(getDeathCA(), p.getDeathCA()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
                     Game.inPlay = false;
                     killer=true;
                     System.out.println("Death by block with dist: "+(p.posY - by));
@@ -171,9 +171,6 @@ public class Block {
             case 'p': // Pad
                 g.setPaint(colors[S]);
                 g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
-
-                g.setPaint(Color.cyan);
-                g.fill(getColCA().getRect()); // Debug collision area
                 break;
             default: return;
         }

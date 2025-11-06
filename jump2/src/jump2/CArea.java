@@ -41,7 +41,7 @@ public class CArea {
   public void rotate(double r, CP c) {
     p1.rotateSelf(r,c);
     p2.rotateSelf(r,c);
-    this.setCorners();
+    setCorners();
   }
   /** Sets p1p2 to ltrb. */
   public void cornerPoints() {
@@ -59,7 +59,7 @@ public class CArea {
     );
   }
   public Rectangle2D getRect() {
-    this.setCorners();
+    setCorners();
     return new Rectangle2D.Double(l,t,w,h);
   }
 

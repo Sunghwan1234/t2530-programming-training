@@ -77,7 +77,7 @@ public class Player {
         if (gravity==1) {color = Color.green;} else {color = Color.cyan;}
         if (orbContact==' ') {color2 = Color.white;} else {color2 = Color.magenta;}
         g.setPaint(color);
-        g.setStroke(new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL));
+        g.setStroke(new BasicStroke(2,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL));
         g.fill(new Rectangle2D.Double(posX,posY,width,height));
         g.setPaint(color2);
         g.draw(new Rectangle2D.Double(posX,posY,width,height));
