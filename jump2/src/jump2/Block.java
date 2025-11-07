@@ -40,6 +40,7 @@ public class Block {
                     rx()+width-2, by+height               // Right Bottom
                 );
                 area.rotate(r, center());
+                area.cornerPoints();
                 return area;
             default:
                 return new CArea(rx(), by, rx()+width, by+height);
@@ -59,6 +60,7 @@ public class Block {
                 );
                 area.cornerPoints();
                 area.rotate(r, center());
+                area.cornerPoints();
                 return area;
             default: return new CArea();
         }

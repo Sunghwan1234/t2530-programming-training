@@ -3,7 +3,7 @@ package jump2;
 import java.awt.geom.*;
 
 public class CArea {
-  private CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
+  public CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
   /** Left Top, Right Bottom */
   public CP lt = new CP(0,0), rb = new CP(0,0); // Left Top and Right Bottom points
   private double l, t, r, b, w,h;
@@ -41,7 +41,6 @@ public class CArea {
   public void rotate(double r, CP c) {
     p1.rotateSelf(r,c);
     p2.rotateSelf(r,c);
-    setCorners();
   }
   /** Sets p1p2 to ltrb. */
   public void cornerPoints() {

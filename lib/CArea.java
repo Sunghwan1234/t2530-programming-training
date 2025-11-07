@@ -1,9 +1,10 @@
 package lib;
 
+import java.awt.Polygon;
 import java.awt.geom.*;
 
 public class CArea {
-  private CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
+  public CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
   /** Left Top, Right Bottom */
   public CP lt = new CP(0,0), rb = new CP(0,0); // Left Top and Right Bottom points
   private double l, t, r, b, w,h;
@@ -41,7 +42,6 @@ public class CArea {
   public void rotate(double r, CP c) {
     p1.rotateSelf(r,c);
     p2.rotateSelf(r,c);
-    setCorners();
   }
   /** Sets p1p2 to ltrb. */
   public void cornerPoints() {
@@ -58,9 +58,15 @@ public class CArea {
       a1.b>a2.t
     );
   }
+  public Rectangle2D getPRect() {
+    return new Rectangle2D.Double(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
+  }
   public Rectangle2D getRect() {
     setCorners();
     return new Rectangle2D.Double(l,t,w,h);
   }
-
+  public Polygon getPoly() {
+    setCorners();
+    return new Polygon(new int[] {(int)l,(int)p2.x}, new int[(int)p1.y,(int)p2.y],2)
+  }
 }

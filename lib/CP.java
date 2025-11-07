@@ -16,8 +16,8 @@ public class CP {
   }
   public void rotateSelf(double r, CP c) { // FIXED
       double angle = Math.toRadians(r); // Angle in radians
-      this.x = c.x + (this.x-c.x)*Math.cos(-angle) - (this.y-c.y)*Math.sin(-angle); // Rotated x
-      this.y = c.y + (this.x-c.x)*Math.sin(-angle) + (this.y-c.y)*Math.cos(-angle); // Rotated y
+      x = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
+      y = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
   }
   /** Rotates an array of points by angle r from centerpoint c */
   public static CP[] rotateArray(double r, CP c, CP[] p) {
