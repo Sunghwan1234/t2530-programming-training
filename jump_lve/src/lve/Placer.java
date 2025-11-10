@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.Arrays;
 
+import lib.*;
+
 public class Placer {
     private static final int width = 20, height = 20;
 
@@ -39,7 +41,7 @@ public class Placer {
     }
 
     public void place(Blocks blocks) {
-        blocks.block[blocks.blockCount] = blocks.new Block(
+        blocks.block[blocks.blockCount] = new Block(
             x,y,r,Editor.BLOCK_TYPES[blockType[0]]+blockType[1]
         );
         blocks.blockCount+=1;
@@ -88,22 +90,7 @@ public class Placer {
         render(blocks, g);
     }
 
-
     public void render(Blocks blocks, Graphics2D g) {
-        blocks.renderBlock(g, x-Editor.ScreenX, y-Editor.ScreenY, r, getCharTypes()[0], getCharTypes()[1]);
-    //     switch (blockType[0]) {
-    //         case 0:
-    //             paint = new GradientPaint((float)x+width/2,(float)y,Color.white,(float)x+width/2,(float)y+height,Color.black);
-    //             fill = new Rectangle2D.Double(x,y,width,height);
-    //             stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
-    //             outline = new Rectangle2D.Double(x-1,y,width,height);
-    //             break;
-    //         default: return;
-    //     }
-    //     g.setPaint(paint);
-    //     g.fill(fill); // error
-    //     g.setPaint(Color.white);
-    //     g.setStroke(stroke);
-    //     g.draw(outline);
+        Blocks.renderBlock(new CP(x-Editor.ScreenX, y-Editor.ScreenY), r, getCharTypes()[0], getCharTypes()[1],g);
     }
 }
