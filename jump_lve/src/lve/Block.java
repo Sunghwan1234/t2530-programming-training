@@ -1,7 +1,9 @@
-package jump2;
+package lve;
 
 import java.awt.*;
 import java.awt.geom.*;
+import lib.CP;
+import lib.CArea;
 
 /** Block Class v1 */
 public class Block {
@@ -78,51 +80,6 @@ public class Block {
             collide = true;
         }
         return collide;
-    }
-    /** Handles all collision with the player. */
-    public void collide(Player p, Graphics2D g) {
-        switch (type) {
-            case 'b':
-                if (CArea.col(getDeathCA(), p.getDeathCA()) && Math.abs(p.posY - by) < 10) { // 80 - 80+10 = 90
-                    Game.inPlay = false;
-                    killer=true;
-                    System.out.println("Death by block with dist: "+(p.posY - by));
-                }
-                if (CArea.col(getColCA(), p.getColCA()) && Math.abs(p.posY - by) >= 10 ) {
-                    p.onGround = true;
-                    p.posY = by - p.height*p.gravity;
-                } break;
-                
-            case 's': // Spike
-                if (CArea.col(getDeathCA(), p.getDeathCA())) {
-                    Game.inPlay = false;
-                    killer=true;
-                } break;
-            case 'o': // Orb
-                if (areaCollide(getOrbArea(), p.getColArea())) {
-                    System.out.println("Orb: "+subtype);
-                    p.orbContact = subtype;
-                    disabled = true;
-                } break;
-            case 'p': // Pad
-                if (CArea.col(getColCA(),p.getColCA())) {
-                    p.posY-=p.gravity;
-                    switch (subtype) {
-                        case '0': // Yellow
-                            p.velY = -5*p.gravity; break;
-                        case '1':
-                            p.velY = -3.8*p.gravity; break;
-                        case '2':
-                            p.velY = -6.7*p.gravity; break;
-                        case '3':
-                            p.gravity *= -1;
-                            p.velY = p.gravity*4; break;
-                        default:break;
-                    }
-                    disabled = true;
-                } break;
-            default: break;
-        }
     }
     public void render(Graphics2D g) {
         double x=rx(), y=by;

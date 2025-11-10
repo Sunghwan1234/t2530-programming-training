@@ -1,4 +1,4 @@
-package jump2;
+package lib;
 
 import java.awt.*;
 import java.awt.geom.*;

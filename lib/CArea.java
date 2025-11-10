@@ -3,6 +3,7 @@ package lib;
 import java.awt.Polygon;
 import java.awt.geom.*;
 
+/** Custom Area v1.1 */
 public class CArea {
   public CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
   /** Left Top, Right Bottom */
@@ -58,15 +59,12 @@ public class CArea {
       a1.b>a2.t
     );
   }
-  public Rectangle2D getPRect() {
-    return new Rectangle2D.Double(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
-  }
   public Rectangle2D getRect() {
     setCorners();
     return new Rectangle2D.Double(l,t,w,h);
   }
   public Polygon getPoly() {
     setCorners();
-    return new Polygon(new int[] {(int)l,(int)p2.x}, new int[] {(int)p1.y,(int)p2.y},2);
+    return new Polygon(new int[] {(int)p1.x,(int)p2.x,(int)p2.x,(int)p1.x}, new int[] {(int)p1.y,(int)p1.y,(int)p2.y,(int)p2.y},4);
   }
 }

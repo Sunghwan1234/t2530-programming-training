@@ -38,23 +38,15 @@ public class Tester extends JPanel implements ActionListener, KeyListener {
           Graphics2D g2 = (Graphics2D) g;
           g2.setPaint(Color.black);
           g2.fillRect(0,0,500,500);
+          CP c = new CP(100+width/2,100+height/2);
+          CArea a = new CArea(100,100,100+width,100+height);
 
-          CP p = new CP(100,110);
-          CP p2 = new CP(100,110);
-
-          CP c = new CP(100, 100);
-
-          CP rp = p.rotate(r,c);
-          p2.rotateSelf(r,c);
+          a.rotate(r,c);
 
           g2.setPaint(Color.green);
-          g2.drawRect((int)c.x,(int)c.y,5,5);
-
-          g2.setPaint(Color.red);
-          g2.drawRect((int)rp.x,(int)rp.y,5,5);
-
+          g2.draw(a.getPoly());
           g2.setPaint(Color.magenta);
-          g2.drawRect((int)p2.x,(int)p2.y,5,5);
+          g2.draw(a.getRect());
           
           
           g2.setPaint(Color.WHITE);

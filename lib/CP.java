@@ -2,7 +2,7 @@ package lib;
 
 /** CustomPoint v2 */
 public class CP {
-  double x, y;
+  public double x, y;
   public CP(double x, double y) {
       this.x = x;
       this.y = y;
