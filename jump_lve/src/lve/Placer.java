@@ -5,21 +5,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.Arrays;
 
-import lib.*;
+import lve.lib.CP;
 
 public class Placer {
-    private static final int width = 20, height = 20;
 
-    double x=0, y=430, r=0;
-    int[] blockType = {0,0};
+    public double x=0, y=430, r=0;
+    private int[] blockType = {0,0};
 
-    Paint paint;
-    Stroke stroke;
-    Shape outline, fill;
-
-    BufferedWriter writer;
+    private BufferedWriter writer;
 
     private boolean[] keypressed = new boolean[100];
 
@@ -49,7 +43,6 @@ public class Placer {
         try {
             writer.write(x + ";" + y + ";" + r + ";" + getCharTypes()[0] + getCharTypes()[1]);
             writer.newLine(); // Writes a new line separator
-            writer.close();
             System.out.println(x + ";" + y + ";" + r + ";" + getCharTypes()[0] + getCharTypes()[1]);
         } catch (IOException e) {
             System.err.println("An error occurred while writing to the file: " + e.getMessage());

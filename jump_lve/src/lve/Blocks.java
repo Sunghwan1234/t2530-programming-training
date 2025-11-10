@@ -3,8 +3,6 @@ package lve;
 import java.awt.*;
 import java.util.List;
 
-import lve.Editor.CPoint;
-
 import java.awt.geom.*;
 import java.io.FileNotFoundException;
 // do not use arraylist, it is garbage
@@ -13,7 +11,7 @@ import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import lib.*;
+import lve.lib.*;
 
 public class Blocks {
     public static final int width = 20, height = 20;

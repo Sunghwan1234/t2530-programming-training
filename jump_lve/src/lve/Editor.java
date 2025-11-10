@@ -25,43 +25,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     private final Timer timer;
     private final Blocks blocks;
     private final Placer placer;
-    /** Custom Point class with rotation capabilities! */
-    public static class CPoint {
-        double x, y;
-        public CPoint(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-        double dist(double dx, double dy) {return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));}
-        double dist(CPoint p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
-        CPoint rotate(double r, CPoint c) {
-            double dx=x-c.x, dy=y-c.y; // Distance of x & y to center
-            double angle=Math.toRadians(r); // Angle in radians
-            double rx=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
-            double ry=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
-            return new CPoint(rx, ry);
-        }
-        void rotateSelf(double r, CPoint c) {
-            double dx=c.x-c.x, dy=c.y-c.y; // Distance of x & y to center
-            double angle=Math.toRadians(r); // Angle in radians
-            this.x=c.x+dx*Math.cos(angle)-dy*Math.sin(angle); // Rotated x
-            this.y=c.y+dx*Math.sin(angle)+dy*Math.cos(angle); // Rotated y
-        }
-        /** Rotates an array of points by angle r from centerpoint c */
-        static CPoint[] rotateArray(double r, CPoint c, CPoint[] p) {
-            CPoint[] rp = new CPoint[p.length];
-            for (int i=0;i<p.length;i++) {rp[i] = p[i].rotate(r, c);}
-            return rp;
-        }
-
-        CPoint translate(double dx, double dy) {return new CPoint(x+dx, y+dy);}
-        CPoint scale(double s, CPoint c) {return new CPoint(c.x+(x-c.x)*s, c.y+(y-c.y)*s);}
-        CPoint scale(double sx, double sy, Point c) {return new CPoint(c.x+(x-c.x)*sx, c.y+(y-c.y)*sy);}
-        CPoint midpoint(CPoint p) {return new CPoint((x+p.x)/2, (y+p.y)/2);}
-        @Override
-        public String toString() {return "("+x+", "+y+")";}
-    }
-
+    
     public Editor() {
         this.blocks = new Blocks();
         this.placer = new Placer();
@@ -90,7 +54,6 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
         // Running code
         placer.actions(blocks, g2);
         blocks.render(g2);
-        
 
         // rendering
         // scores
@@ -116,7 +79,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
 
 
 
-           System.out.println("KeyPressed: "+e.getKeyCode());
+           //System.out.println("KeyPressed: "+e.getKeyCode());
         }
     
         @Override

@@ -1,16 +1,12 @@
 package lve;
 
 import java.awt.*;
-import java.awt.geom.*;
 
-import lib.*;
-import lve.Blocks.*;
+import lve.lib.CP;
 
 public class Block {
-    private int width=20, height=20;
     double bx, by, br;
     char type, subtype;
-    
 
     public Block(double x, double y, double r, String t) {
         this.bx=x;

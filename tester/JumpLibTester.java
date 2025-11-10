@@ -1,4 +1,4 @@
-package lib;
+package tester;
 
 import javax.swing.JFrame;
 
