@@ -67,6 +67,6 @@ public class CArea {
   }
   public Polygon getPoly() {
     setCorners();
-    return new Polygon(new int[] {(int)l,(int)p2.x}, new int[(int)p1.y,(int)p2.y],2)
+    return new Polygon(new int[] {(int)l,(int)p2.x}, new int[] {(int)p1.y,(int)p2.y},2);
   }
 }

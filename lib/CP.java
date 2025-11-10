@@ -1,5 +1,6 @@
 package lib;
 
+/** CustomPoint v2 */
 public class CP {
   double x, y;
   public CP(double x, double y) {
@@ -14,10 +15,11 @@ public class CP {
       double ry = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
       return new CP(rx, ry);
   }
-  public void rotateSelf(double r, CP c) { // FIXED
+  public void rotateSelf(double r, CP c) { // FIXED v2
       double angle = Math.toRadians(r); // Angle in radians
-      x = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
-      y = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
+      double nx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
+      double ny = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
+      x=nx; y=ny;
   }
   /** Rotates an array of points by angle r from centerpoint c */
   public static CP[] rotateArray(double r, CP c, CP[] p) {
@@ -26,7 +28,7 @@ public class CP {
       return rp;
   }
   /** [0] is X, [1] is Y. */
-  static int[][] returnIntArray(CP[] points) {
+  public static int[][] returnIntArray(CP[] points) {
     int[][] intpoints = new int[2][points.length];
     for (int i=0;i<points.length;i++) {
       intpoints[0][i] = (int) points[i].x;

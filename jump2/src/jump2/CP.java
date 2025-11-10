@@ -14,10 +14,11 @@ public class CP {
       double ry = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
       return new CP(rx, ry);
   }
-  public void rotateSelf(double r, CP c) { // FIXED
+  public void rotateSelf(double r, CP c) { // FIXED v2
       double angle = Math.toRadians(r); // Angle in radians
-      this.x = c.x + (this.x-c.x)*Math.cos(-angle) - (this.y-c.y)*Math.sin(-angle); // Rotated x
-      this.y = c.y + (this.x-c.x)*Math.sin(-angle) + (this.y-c.y)*Math.cos(-angle); // Rotated y
+      double nx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
+      double ny = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
+      x=nx; y=ny;
   }
   /** Rotates an array of points by angle r from centerpoint c */
   public static CP[] rotateArray(double r, CP c, CP[] p) {
