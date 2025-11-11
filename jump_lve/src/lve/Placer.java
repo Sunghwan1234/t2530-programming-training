@@ -28,22 +28,19 @@ public class Placer {
         }
     }
     
-    public char[] getCharTypes() {
-        String type = Editor.BLOCK_TYPES[blockType[0]]+blockType[1];
-        char[] types = {type.charAt(0),type.charAt(1)};
+    public String getType() {
+        String types = new String(new char[] {Editor.BLOCK_TYPES[blockType[0]],Character.forDigit(blockType[1],10)});
         return types;
     }
 
     public void place(Blocks blocks) {
-        blocks.block[blocks.blockCount] = new Block(
-            x,y,r,Editor.BLOCK_TYPES[blockType[0]]+blockType[1]
-        );
+        blocks.block[blocks.blockCount] = new Block(x,y,r,getType());
         blocks.blockCount+=1;
 
         try {
-            writer.write(x + ";" + y + ";" + r + ";" + getCharTypes()[0] + getCharTypes()[1]);
+            writer.write(x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1));
             writer.newLine(); // Writes a new line separator
-            System.out.println(x + ";" + y + ";" + r + ";" + getCharTypes()[0] + getCharTypes()[1]);
+            System.out.println(x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1));
         } catch (IOException e) {
             System.err.println("An error occurred while writing to the file: " + e.getMessage());
         }
@@ -57,10 +54,10 @@ public class Placer {
             if (Editor.KeyPressed[actionkeyN] && !keypressed[actionkeyN]) {
                 switch (actionkeyN) {
                     case 32: place(blocks);  break; // Space
-                    case 49: blockType[0]++; break; // 3
-                    case 51: blockType[0]--; break; // 1
-                    case 88: blockType[1]++; break; // X 
-                    case 90: blockType[1]--; break; // Z
+                    case 49: blockType[0]--; break; // 1
+                    case 51: blockType[0]++; break; // 3
+                    case 88: blockType[1]--; break; // X 
+                    case 90: blockType[1]++; break; // Z
                     case 81: r-=90; if (r<0) {r=270;} break; // Q
                     case 69: r+=90; if (r>=360) {r=0;} break; // E
                     case 37: Editor.ScreenX-=20; if (Editor.KeyPressed[16] /* Shift Key */) {continue;} else {break;}  // Left
@@ -76,14 +73,17 @@ public class Placer {
                 }
                 keypressed[actionkeyN]=true;
             } else if (!Editor.KeyPressed[actionkeyN]) {keypressed[actionkeyN]=false;}}
-        if(blockType[0]>9){blockType[0]=0;} if(blockType[1]>9){blockType[1]=1;}
-        if (r<=-90) {r=270;} if (r>=360) {r=0;}
+        blockType[0] = blockType[0] % Editor.BLOCK_TYPES.length;
+        blockType[1] = blockType[1] % 9;
+        r=r%360;
         if(y>430){y=430;}
+        System.out.println(blockType[1]);
+        System.out.println(getType());
 
         render(blocks, g);
     }
 
     public void render(Blocks blocks, Graphics2D g) {
-        Blocks.renderBlock(new CP(x-Editor.ScreenX, y-Editor.ScreenY), r, getCharTypes()[0], getCharTypes()[1],g);
+        Blocks.renderBlock(new CP(x-Editor.ScreenX, y-Editor.ScreenY), r, getType(),g);
     }
 }

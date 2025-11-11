@@ -19,11 +19,11 @@ public class Blocks {
     public Block block[] = new Block[1000]; // Block container List of Class Block
     public int blockCount = 0;
 
-    public static void renderBlock(CP xy, double br, char type, char subtype, Graphics2D g) {
+    public static void renderBlock(CP xy, double br, String t, Graphics2D g) {
         Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
-
+        char type = t.charAt(0);
         double x=xy.x, y=xy.y;
-        int S = Character.getNumericValue(subtype);
+        int S = Character.getNumericValue(t.charAt(1));
         float fx=(float)x, fy=(float)y; int ix=(int)x, iy=(int)y;
         CP center = new CP(x+width/2,y+height/2);
         Stroke stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
@@ -96,7 +96,7 @@ public class Blocks {
             blockdata = arr1.split(";", 0); // The String of x;y;rotation;type gets split to array blockdata[0-3]
 
             int blockTypeIndex = Character.getNumericValue(blockdata[3].charAt(0)) - 1;
-            String blocktype = Editor.BLOCK_TYPES[blockTypeIndex] + blockdata[3].charAt(1);
+            String blocktype = new String(new char[] {Editor.BLOCK_TYPES[blockTypeIndex], blockdata[3].charAt(1)});
             System.out.println(blocktype);
             block[blockCount] = new Block( // Creates the Block object!
                     Double.parseDouble(blockdata[0])+400,

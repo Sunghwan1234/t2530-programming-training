@@ -18,7 +18,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     public static boolean KeyPressed[] = new boolean[100];
     public static double ScreenX=0, ScreenY=0;
 
-    public static final String[] BLOCK_TYPES = {"b","s","o","p"};
+    public static final char[] BLOCK_TYPES = {'b','s','o','p'};
 
     public static final boolean IMPORT_LEVEL = true;
 
@@ -62,7 +62,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
             "ScreenX: " + ScreenX,
             "Block X: " + placer.x,
             "Block Y: " + placer.y,
-            "BlockType: "+placer.getCharTypes()[0]+placer.getCharTypes()[1],
+            "BlockType: "+placer.getType().charAt(0)+placer.getType().charAt(1),
             "Block Rotation: "+placer.r,
             "Block Count: "+blocks.blockCount
         };
