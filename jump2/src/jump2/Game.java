@@ -43,7 +43,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }}
-        timer = new Timer(1, this);
+        timer = new Timer(16, this);
         timer.start();
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -61,7 +61,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         g.setColor(Color.white);
         g.fillRect(0,groundHeight+20,width,20);
 
-        
+        player.pad=false;
         blocks.tick(g2, player);
         player.tick(g2);
 

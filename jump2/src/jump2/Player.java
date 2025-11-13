@@ -12,6 +12,7 @@ public class Player {
     public boolean onGround = false;
     public boolean jumpable = false;
     public boolean keyCooldown = false;
+    public boolean pad = false;
     public char orbContact = ' '; // ' ' = none, '0' = yellow, '1' = pink, '2' = red, '3' = cyan
 
     public Player() {}
@@ -25,7 +26,7 @@ public class Player {
 
     public void tick(Graphics2D g) {
         if (!Game.inPlay) {paint(g); return;}
-        if (posY > Game.groundHeight-1) { // Under Ground
+        if (posY > Game.groundHeight-1 && !pad) { // Under Ground
             posY = Game.groundHeight;
             onGround=true;
         } else {

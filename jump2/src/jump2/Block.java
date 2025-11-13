@@ -17,7 +17,7 @@ public class Block {
     public Block(double x, double y, double r, String t) {
         this.bx=x;
         this.by=y;
-        this.r=r;
+        this.r=r<0?360-r:r;
         this.type = t.charAt(0);
         this.subtype = t.charAt(1);
         System.out.println("Block created: "+x+";"+y+";"+r+";"+type+"."+subtype);

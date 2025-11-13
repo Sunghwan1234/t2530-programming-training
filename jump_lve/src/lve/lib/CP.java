@@ -10,13 +10,13 @@ public class CP {
   double dist(double dx, double dy) {return Math.sqrt((x-dx)*(x-dx)+(y-dy)*(y-dy));}
   double dist(CP p) {return Math.sqrt((x-p.x)*(x-p.x)+(y-p.y)*(y-p.y));}
   public CP rotate(double r, CP c) { // FIXED
-      double angle = Math.toRadians(r); // Angle in radians
+      double angle = Math.toRadians(-r); // Angle in radians
       double rx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
       double ry = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
       return new CP(rx, ry);
   }
   public void rotateSelf(double r, CP c) { // FIXED v2
-      double angle = Math.toRadians(r); // Angle in radians
+      double angle = Math.toRadians(-r); // Angle in radians
       double nx = c.x + (x-c.x)*Math.cos(-angle) - (y-c.y)*Math.sin(-angle); // Rotated x
       double ny = c.y + (x-c.x)*Math.sin(-angle) + (y-c.y)*Math.cos(-angle); // Rotated y
       x=nx; y=ny;

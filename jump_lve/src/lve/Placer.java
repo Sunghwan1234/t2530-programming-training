@@ -19,14 +19,7 @@ public class Placer {
 
     public static int blocksplaced = 0;
     
-    public Placer() {
-        try {
-            writer = new BufferedWriter(new FileWriter("levelExport.txt"));
-        } catch (IOException e) {
-            System.err.println("Failed to initialize writer: " + e.getMessage());
-            writer = null;
-        }
-    }
+    public Placer() {}
     
     public String getType() {
         String types = new String(new char[] {Editor.BLOCK_TYPES[blockType[0]],Character.forDigit(blockType[1],10)});
@@ -38,8 +31,16 @@ public class Placer {
         blocks.blockCount+=1;
 
         try {
+            writer = new BufferedWriter(new FileWriter("levelExport.txt"));
+        } catch (IOException e) {
+            System.err.println("Failed to initialize writer: " + e.getMessage());
+            writer = null;
+        }
+
+        try {
             writer.write(x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1));
             writer.newLine(); // Writes a new line separator
+            writer.close();
             System.out.println(x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1));
         } catch (IOException e) {
             System.err.println("An error occurred while writing to the file: " + e.getMessage());
@@ -73,14 +74,11 @@ public class Placer {
                 }
                 keypressed[actionkeyN]=true;
             } else if (!Editor.KeyPressed[actionkeyN]) {keypressed[actionkeyN]=false;}}
-        blockType[0] = blockType[0] % Editor.BLOCK_TYPES.length;
-        blockType[1] = blockType[1] % 9;
-        r=r%360;
+        blockType[0] = Math.floorMod(blockType[0], Editor.BLOCK_TYPES.length);
+        blockType[1] = Math.floorMod(blockType[1], 9);
+        r = r<0?360-r:r % 360;
         if(y>430){y=430;}
-        System.out.println(blockType[1]);
-        System.out.println(getType());
-
-        render(blocks, g);
+        //System.out.println(blockType[0]);
     }
 
     public void render(Blocks blocks, Graphics2D g) {

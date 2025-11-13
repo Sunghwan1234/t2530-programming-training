@@ -8,7 +8,8 @@ public class CArea {
   public CP p1=new CP(0,0), p2=new CP(0,0); // Original Points of the Area
   /** Left Top, Right Bottom */
   public CP lt = new CP(0,0), rb = new CP(0,0); // Left Top and Right Bottom points
-  private double l, t, r, b, w,h;
+  public double l, t, r, b, w,h;
+  public double xd, yd;
 
   public CArea() {}
   public CArea(CP p1, CP p2) {
@@ -38,11 +39,13 @@ public class CArea {
     l = lt.x; t = lt.y;
     r = rb.x; b = rb.y;
     w = r-l; h = b-t;
+    xd = p2.x-p1.x; yd = p2.y-p1.y;
   }
 
   public void rotate(double r, CP c) {
     p1.rotateSelf(r,c);
     p2.rotateSelf(r,c);
+    setVars();
   }
   /** Sets p1p2 to ltrb. */
   public void cornerPoints() {

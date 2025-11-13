@@ -18,7 +18,7 @@ public class Renderer extends JPanel implements ActionListener {
 
     public Renderer() { // Initiate all your entities here
 
-        this.timer = new Timer(1, this);
+        this.timer = new Timer(30, this);
         this.timer.start();
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);

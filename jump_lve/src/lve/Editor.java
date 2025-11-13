@@ -37,7 +37,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
             } catch (FileNotFoundException e) {e.printStackTrace();}
         }
 
-        this.timer = new Timer(1, this);
+        this.timer = new Timer(16, this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         addKeyListener(this);
@@ -46,7 +46,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     }
     @Override
     public void paint(Graphics g) {
-        Graphics2D g2=(Graphics2D) g;
+        final Graphics2D g2 = (Graphics2D) g;
         // BG and Ground
         g.setColor(Color.black); g.fillRect(0, 0, WIN_WIDTH, WIN_HEIGHT);
         g.setColor(Color.white); g.drawRect(-1, (int) (groundHeight-ScreenY), WIN_WIDTH, 15);
@@ -54,6 +54,7 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
         // Running code
         placer.actions(blocks, g2);
         blocks.render(g2);
+        placer.render(blocks, g2);
 
         // rendering
         // scores
@@ -74,18 +75,18 @@ public class Editor extends JPanel implements ActionListener, KeyListener{
     public void keyTyped(KeyEvent e) {}
 
     @Override
-        public void keyPressed(KeyEvent e) { // - - - - - - - - - - CONTROLS - - - - - - - - - - \\
-           KeyPressed[e.getKeyCode()] = true;
+    public void keyPressed(KeyEvent e) { // - - - - - - - - - - CONTROLS - - - - - - - - - - \\
+        KeyPressed[e.getKeyCode()] = true;
 
 
 
-           //System.out.println("KeyPressed: "+e.getKeyCode());
-        }
+        //System.out.println("KeyPressed: "+e.getKeyCode());
+    }
     
-        @Override
-        public void keyReleased(KeyEvent e) {
-            KeyPressed[e.getKeyCode()] = false;
-        }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        KeyPressed[e.getKeyCode()] = false;
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
