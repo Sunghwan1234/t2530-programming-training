@@ -3,10 +3,11 @@ package lve;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import lib.CP;
+
 import java.awt.*;
 import java.awt.geom.*;
-
-import lve.lib.CP;
 
 public class Placer {
 
@@ -19,7 +20,14 @@ public class Placer {
 
     public static int blocksplaced = 0;
     
-    public Placer() {}
+    public Placer() {
+        try {
+            writer = new BufferedWriter(new FileWriter("levelExport.txt"));
+        } catch (IOException e) {
+            System.err.println("Failed to initialize writer: " + e.getMessage());
+            writer = null;
+        }
+    }
     
     public String getType() {
         String types = new String(new char[] {Editor.BLOCK_TYPES[blockType[0]],Character.forDigit(blockType[1],10)});
@@ -31,17 +39,11 @@ public class Placer {
         blocks.blockCount+=1;
 
         try {
-            writer = new BufferedWriter(new FileWriter("levelExport.txt"));
-        } catch (IOException e) {
-            System.err.println("Failed to initialize writer: " + e.getMessage());
-            writer = null;
-        }
-
-        try {
-            writer.write(x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1));
+            String writingLine = x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1);
+            writer.write(writingLine);
             writer.newLine(); // Writes a new line separator
-            writer.close();
-            System.out.println(x + ";" + y + ";" + r + ";" + getType().charAt(0) + getType().charAt(1));
+            writer.flush();
+            System.out.println(writingLine);
         } catch (IOException e) {
             System.err.println("An error occurred while writing to the file: " + e.getMessage());
         }

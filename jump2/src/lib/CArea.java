@@ -67,4 +67,13 @@ public class CArea {
     setCorners();
     return new Polygon(new int[] {(int)p1.x,(int)p2.x,(int)p2.x,(int)p1.x}, new int[] {(int)p1.y,(int)p1.y,(int)p2.y,(int)p2.y},4);
   }
+
+  public double getW() {
+    setCorners();
+    return w;
+  }
+  public double getH() {
+    setCorners();
+      return h;
+  }
 }

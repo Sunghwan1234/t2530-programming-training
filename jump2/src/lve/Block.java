@@ -2,7 +2,7 @@ package lve;
 
 import java.awt.*;
 
-import lve.lib.CP;
+import lib.CP;
 
 public class Block {
     double bx, by, br;

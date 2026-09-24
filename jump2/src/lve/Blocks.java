@@ -3,6 +3,8 @@ package lve;
 import java.awt.*;
 import java.util.List;
 
+import lib.*;
+
 import java.awt.geom.*;
 import java.io.FileNotFoundException;
 // do not use arraylist, it is garbage
@@ -10,8 +12,6 @@ import java.util.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
-import lve.lib.*;
 
 public class Blocks {
     public static final int width = 20, height = 20;
@@ -75,7 +75,7 @@ public class Blocks {
 
 
                 g.setPaint(colors[S]);
-                g.fillArc((int)padArea.p1.x, (int)padArea.p1.y, (int)padArea.xd, (int)padArea.yd,(int) (180-r), -180);
+                g.fillArc((int)padArea.p1.x, (int)padArea.p1.y, (int)padArea.getW(), (int)padArea.getH(),(int) (180-r), -180);
                 break;
             default: return;
         }
