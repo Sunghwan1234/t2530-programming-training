@@ -3,6 +3,8 @@ package jump2;
 import java.awt.*;
 import java.util.List;
 
+import lve.Editor;
+
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -37,21 +39,27 @@ public class Blocks {
         blockCount = 0;
         Scanner sc = new Scanner(file); // I use Scanner.
         List<String> lines = new ArrayList<>();
-        while (sc.hasNextLine()) {lines.add(sc.nextLine());}
-        sc.close();
+        while (sc.hasNextLine()) {lines.add(sc.nextLine());} sc.close();
         String[] arr = lines.toArray(String[]::new); // The scanner output goes to String array arr[x][v]
         //System.out.println(Arrays.deepToString(arr));
-        String[] blockdata;
-        for (String arr1 : arr) { // For every item in arr (that contains x;y;rotation;type)
-            blockdata = arr1.split(";", 0); // The String of x;y;rotation;type gets split to array blockdata[0-3]
-            int blockTypeIndex = Character.getNumericValue(blockdata[3].charAt(0)) - 1;
-            String blocktype = Game.BLOCK_TYPES[blockTypeIndex] + blockdata[3].charAt(1);
+
+        String[] blockData;
+        for (String arrBlock : arr) { // For every item in arr (that contains x;y;rotation;type)
+            if (!arrBlock.contains(";")) {continue;}
+            blockData = arrBlock.split(";", 0); // The String of x;y;rotation;type gets split to array blockdata[0-3]
+            String blockType;
+            if (new String(Editor.BLOCK_TYPES).contains(""+blockData[3].charAt(0))) {
+                blockType = blockData[3];
+            } else {
+                int blockTypeIndex = Character.getNumericValue(blockData[3].charAt(0)) - 1;
+                blockType = new String(new char[] {Editor.BLOCK_TYPES[blockTypeIndex], blockData[3].charAt(1)});
+            }
             //System.out.println(blocktype);
             block[blockCount] = new Block( // Creates the Block object!
-                    Double.parseDouble(blockdata[0])+400,
-                    Double.parseDouble(blockdata[1]),
-                    Double.parseDouble(blockdata[2]),
-                    blocktype);
+                    Double.parseDouble(blockData[0])+400,
+                    Double.parseDouble(blockData[1]),
+                    Double.parseDouble(blockData[2]),
+                    blockType);
             if (block[blockCount].bx > lastBlockX) {lastBlockX = block[blockCount].bx;}
             //System.out.println(Arrays.deepToString(blockdata));
             blockCount += 1;

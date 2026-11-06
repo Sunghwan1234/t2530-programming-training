@@ -30,8 +30,8 @@ public class Placer {
     }
     
     public String getType() {
-        String types = new String(new char[] {Editor.BLOCK_TYPES[blockType[0]],Character.forDigit(blockType[1],10)});
-        return types;
+        String type = new String(new char[] {Editor.BLOCK_TYPES[blockType[0]],Character.forDigit(blockType[1],10)});
+        return type;
     }
 
     public void place(Blocks blocks) {
@@ -84,6 +84,6 @@ public class Placer {
     }
 
     public void render(Blocks blocks, Graphics2D g) {
-        Blocks.renderBlock(new CP(x-Editor.ScreenX, y-Editor.ScreenY), r, getType(),g);
+        lib.BlockDrawer.render(g, new Block(x,y,r,getType()), Editor.ScreenX, Editor.ScreenY);
     }
 }

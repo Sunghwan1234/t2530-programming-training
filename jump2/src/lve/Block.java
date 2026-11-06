@@ -2,21 +2,13 @@ package lve;
 
 import java.awt.*;
 
-import lib.CP;
+import lib.*;
 
-public class Block {
-    double bx, by, br;
-    char type, subtype;
-    String fullType;
-
+public class Block extends lib.Block {
     public Block(double x, double y, double r, String t) {
-        this.bx=x;
-        this.by=y;
-        this.br=r;
-        this.fullType = t;
+        super(x, y, r, t);
     }
-    public CP rp() {return new CP(bx-Editor.ScreenX,by-Editor.ScreenY);}
     public void render(Graphics2D g) {
-        Blocks.renderBlock(rp(), br, fullType, g);
+        BlockDrawer.render(g, this, Editor.ScreenX, Editor.ScreenY);
     }
 }

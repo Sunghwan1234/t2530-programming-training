@@ -3,6 +3,8 @@ package jump2;
 import java.awt.*;
 import java.awt.geom.*;
 
+import lib.*;
+
 public class Player {
     public double width = 20, height = 20;
     public int posX = 50; public double posY = Game.groundHeight-height;

@@ -3,23 +3,18 @@ package jump2;
 import java.awt.*;
 import java.awt.geom.*;
 
-/** Block Class v1 */
-public class Block {
-    int width = Blocks.width;
-    int height = Blocks.height;
+import lib.*;
 
-    double bx, by, r; // Position & Rotation
-    char type, subtype; // Block Type & subtypes
-    Color[] colors = {Color.pink,Color.yellow,Color.red,Color.cyan,Color.green};
-    boolean killer=false;
-    boolean disabled=false;
-    /** Creates a Block. t is a String, 2 chars. */
+/** Block Class v1 */
+public class Block extends lib.Block {
+    public int width = Blocks.width;
+    public int height = Blocks.height;
+
+    private boolean killer=false;
+    public boolean disabled=false;
+
     public Block(double x, double y, double r, String t) {
-        this.bx=x;
-        this.by=y;
-        this.r=r<0?360-r:r;
-        this.type = t.charAt(0);
-        this.subtype = t.charAt(1);
+        super(x, y, r, t);
         System.out.println("Block created: "+x+";"+y+";"+r+";"+type+"."+subtype);
     }
     /** Returns the updated x position. */
@@ -125,56 +120,7 @@ public class Block {
         }
     }
     public void render(Graphics2D g) {
-        double x=rx(), y=by;
-        int S = Character.getNumericValue(subtype);
-        float fx=(float)x, fy=(float)y; int ix=(int)x, iy=(int)y;
-        CP center = new CP(x+width/2,y+height/2);
-        Stroke stroke = new BasicStroke(1,BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL);
-        switch (type) {
-            case 'b': // Block
-                CP[] gradient = new CP[] {
-                    new CP(fx+width/2,fy), // Top middle
-                    new CP(fx+width/2,fy+height) // Bottom middle
-                };
-                gradient = CP.rotateArray(r, center, gradient);
-                g.setPaint(new GradientPaint(
-                    (float) gradient[0].x, (float) gradient[0].y, Color.white, // at Top middle
-                    (float) gradient[1].x, (float) gradient[1].y, Color.black // at Bottom middle
-                ));
-                g.fill(new Rectangle2D.Double(x,y,width,height));
-                g.setStroke(stroke);
-                g.setPaint(Color.white);
-                g.draw(new Rectangle2D.Double(x,y,width,height));
-                break;
-            case 's': // Spike
-                CP[] points = new CP[] {
-                    new CP(x,y+height), // Left Bottom
-                    new CP(x+width/2,y), // Middle Top
-                    new CP(x+width,y+height) // Right Bottom
-                };
-                points = CP.rotateArray(r, center, points);
-                int[][] intArray = CP.returnIntArray(points);
-                Polygon poly = new Polygon(intArray[0],intArray[1],3);
-
-                g.setPaint(new GradientPaint(fx+width/2,fy,Color.red,fx+width/2,fy+height,Color.white));
-                g.fill(poly);
-                g.setStroke(stroke);
-                g.draw(poly);
-                break;
-            case 'o': // Orb
-                g.setPaint(colors[S]);
-                g.fillOval(ix, iy, width, height);
-                g.setPaint(Color.white);
-                g.setStroke(stroke);
-                g.drawOval(ix, iy, width, height);
-                g.drawOval(ix+3, iy+3, width-6, height-6);
-                break;
-            case 'p': // Pad
-                g.setPaint(colors[S]);
-                g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
-                break;
-            default: return;
-        }
+        BlockDrawer.render(g,this, Blocks.scroll, 0);
         g.setPaint(Color.cyan);
         if (disabled) {
             g.setPaint(Color.red);

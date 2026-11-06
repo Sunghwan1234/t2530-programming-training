@@ -27,7 +27,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     
     // Game settings
     public static final boolean levelImport = true; // Import level from text file
-    public static final String levelPath = "Level.txt"; // Level path
+    public static final String levelPath = "Level"+".txt"; // Level path
 
     public static boolean inPlay = true;
 
@@ -64,8 +64,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         player.pad=false;
         blocks.tick(g2, player);
         player.tick(g2);
-
-        
 
         stringWriter(g, new String[] {
             "test: " + Game.test,
