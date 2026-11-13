@@ -56,7 +56,7 @@ public class Blocks {
             }
             //System.out.println(blocktype);
             block[blockCount] = new Block( // Creates the Block object!
-                    Double.parseDouble(blockData[0])+400,
+                    Double.parseDouble(blockData[0])+100,
                     Double.parseDouble(blockData[1]),
                     Double.parseDouble(blockData[2]),
                     blockType);

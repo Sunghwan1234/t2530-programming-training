@@ -55,10 +55,10 @@ public class Player {
             } else if (!(orbContact==' ') && !keyCooldown) { // Orb Jump
                 posY -= gravity;
                 switch (orbContact) {
-                    case '0': // YELLOW
-                        velY = gravity*-4.1; break;
-                    case '1': // PINK
+                    case '0': // PINK
                         velY = gravity*-3.4; break;
+                    case '1': // YELLOW
+                        velY = gravity*-4.1; break;
                     case '2': // RED
                         velY = gravity*-6.7; break;
                     case '3': // CYAN

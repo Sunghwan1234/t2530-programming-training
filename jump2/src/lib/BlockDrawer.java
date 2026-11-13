@@ -53,8 +53,15 @@ public class BlockDrawer {
                 g.drawOval(ix+3, iy+3, width-6, height-6);
                 break;
             case 'p': // Pad
+                CArea padArea = new CArea(
+                    new CP(ix,iy+height-6),
+                    new CP(ix+width,iy+height+3)
+                );
+                padArea.rotate(b.r, center);
+
+
                 g.setPaint(colors[S]);
-                g.fillArc(ix, iy+height-(height/4), width, height/2, 180, -180);
+                g.fillArc((int)padArea.p1.x, (int)padArea.p1.y, (int)padArea.getW(), (int)padArea.getH(),(int) (180-b.r), -180);
                 break;
             default: return;
         }

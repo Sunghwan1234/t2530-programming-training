@@ -103,10 +103,10 @@ public class Block extends lib.Block {
                 if (CArea.col(getColCA(),p.getColCA())) {
                     p.posY-=p.gravity;
                     switch (subtype) {
-                        case '0': // Yellow
-                            p.velY = -5*p.gravity; break;
-                        case '1':
+                        case '0': // Pink
                             p.velY = -3.8*p.gravity; break;
+                        case '1': // Yellow
+                            p.velY = -5.5*p.gravity; break;
                         case '2':
                             p.velY = -6.7*p.gravity; break;
                         case '3':
